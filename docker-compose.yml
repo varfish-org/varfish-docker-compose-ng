@@ -25,6 +25,37 @@ x-service-varfish-default: &service_varfish_default
 # == Services ================================================================
 
 services:
+  # -- Traefik ----------------------------------------------------------------
+  #
+  # We use traefik as the reverse proxy for all public services.
+  #
+  # This file only contains the bare minimal configuraton.  We provide example
+  # override files as `docker-compose.override.yml-traefik-{cert,le}` for
+  # using custom certificates or letsencrypt.
+
+  traefik:
+    <<: *service_default
+    image: ${image_traefik_name:-traefik}:${image_traefik_version:-2.10}
+    # Expose the default HTTP and HTTPS ports.
+    ports:
+      - "80:80"
+      - "443:443"
+    command:
+      # Enable Docker provider and disable "exposed by default".
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      # Define the "websecure" entrypoint with port 443.
+      - "--entrypoints.websecure.address=:443"
+      # Define the "web" entrypoint with port 80 and configure automated
+      # permantent redirection from web to websecure (HTTP to HTTPS).
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--entrypoints.web.address=:80"
+    volumes:
+      # Mount Docker socket into container so traefik can react to events.
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   # -- Mehari ----------------------------------------------------------------
   #
   # Mehari provides the transcript-related information.
