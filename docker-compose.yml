@@ -1,0 +1,103 @@
+---
+
+version: "3.9"
+
+# == Re-useable Definitions ==================================================
+
+# Default service definition for all (incl. postgres/redis/...)
+x-service-default: &service_default
+  networks:
+    - varfish
+  restart: unless-stopped
+
+# Default service definition for varfish services.
+#
+# We provide the /data directory as read-only to all services as this
+# simplifies the configuration considerably.
+x-service-varfish-default: &service_varfish_default
+  volumes:
+    - type: bind
+      source: ${volumes_basedir:-.}/varfish-static/data
+      target: /data
+      read_only: true
+
+
+# == Services ================================================================
+
+services:
+  # -- Mehari ----------------------------------------------------------------
+  #
+  # Mehari provides the transcript-related information.
+
+  mehari:
+    <<: *service_varfish_default
+    image: "${image_base:-ghcr.io/bihealth}/${image_mehari_name:-mehari}:\
+      ${image_mehari_version:-0.5}"
+
+  # -- Viguno ----------------------------------------------------------------
+  #
+  # Viguno provides the disease/phenotype/gene relationships and related
+  # information..
+
+  viguno:
+    <<: *service_varfish_default
+    image: "${image_base:-ghcr.io/bihealth}/${image_viguno_name:-viguno}:\
+      ${image_viguno_version:-0.1}"
+
+  # -- Annonars ---------------------------------------------------------------
+  #
+  # Annonars provides the variant information but also the gene information.
+
+  annonars:
+    <<: *service_varfish_default
+    image: "${image_base:-ghcr.io/bihealth}/${image_annonars_name:-annona-rs}:\
+      ${image_annonars_version:-0.12.4}"
+
+  # -- PostgreSQL Server -----------------------------------------------------
+  #
+  # We use the default configuration, but mount a volume for the data for
+  # persistent storage.
+
+  postgres:
+    <<: *service_default
+    image: ${image_postgres_name:-postgres}:${image_postgres_version:-12}
+    environment:
+      POSTGRES_USER: varfish
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+      POSTGRES_DB: varfish
+    secrets:
+      - db-password
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-.}/postgres/data
+        target: /var/lib/postgresql/data
+
+  # -- Redis -----------------------------------------------------------------
+  #
+  # We use the default configuration, but mount a volume for the data for
+  # persistent storage.
+
+  redis:
+    <<: *service_default
+    image: ${image_redis_name:-redis}:${image_redis_version:-6}
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-.}/redis/data
+        target: /data
+
+
+# == Secrets ================================================================
+
+secrets:
+  # The database password is configured via environment variable DB_PASSWORD.
+  db-password:
+    file: ${secrets_basedir:-./secrets}/db-password
+
+
+# == Networks ================================================================
+
+networks:
+  # Explicitely configure the "varfish" network so we can control its name.
+  varfish:
+    driver_opts:
+      com.docker.network.bridge.name: br-varfish
