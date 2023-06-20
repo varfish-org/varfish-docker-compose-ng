@@ -35,6 +35,8 @@ services:
 
   traefik:
     <<: *service_default
+    container_name: traefik
+    hostname: traefik
     image: ${image_traefik_name:-traefik}:${image_traefik_version:-2.10}
     # Expose the default HTTP and HTTPS ports.
     ports:
@@ -62,6 +64,8 @@ services:
 
   mehari:
     <<: *service_varfish_default
+    container_name: mehari
+    hostname: mehari
     image: "${image_base:-ghcr.io/bihealth}/${image_mehari_name:-mehari}:\
       ${image_mehari_version:-0.5}"
 
@@ -72,6 +76,8 @@ services:
 
   viguno:
     <<: *service_varfish_default
+    container_name: viguno
+    hostname: viguno
     image: "${image_base:-ghcr.io/bihealth}/${image_viguno_name:-viguno}:\
       ${image_viguno_version:-0.1}"
 
@@ -81,6 +87,8 @@ services:
 
   annonars:
     <<: *service_varfish_default
+    container_name: annonars
+    hostname: annonars
     image: "${image_base:-ghcr.io/bihealth}/${image_annonars_name:-annona-rs}:\
       ${image_annonars_version:-0.12.4}"
 
@@ -91,6 +99,8 @@ services:
 
   postgres:
     <<: *service_default
+    container_name: postgres
+    hostname: postgres
     image: ${image_postgres_name:-postgres}:${image_postgres_version:-12}
     environment:
       POSTGRES_USER: varfish
@@ -110,19 +120,92 @@ services:
 
   redis:
     <<: *service_default
+    container_name: redis
+    hostname: redis
     image: ${image_redis_name:-redis}:${image_redis_version:-6}
     volumes:
       - type: bind
         source: ${volumes_basedir:-.}/redis/data
         target: /data
 
+  # -- Minio (Server) --------------------------------------------------------
+  #
+  # This runs the Minio that is for the internal usage by the VarFish server
+  # only!  It is not exposed to the outside world.
+  #
+  # We configure Minio in standalone mode.  Redundancy of storage must be
+  # ensured using RAID or similar (ZFS/BTRFS).
+
+  minio:
+    <<: *service_default
+    container_name: minio
+    hostname: minio
+    image: "${image_minio_name:-quay.io/minio/minio}:\
+      ${image_minio_version:-latest}"
+    command:
+      - server
+      - /data
+      - --console-address
+      - ":9001"
+    environment:
+      # The administrator credentials are "minioadmin" with the password as
+      # configured in the secret "minio-root-password".
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/minio-root-password
+    secrets:
+      - minio-root-password
+    # Uncomment the following two lines (reminder: "HOST:CONTAINER") to
+    # enable access to the console from the host.
+    ports:
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-.}/minio/data
+        target: /data
+
+  # -- Minio (Client) --------------------------------------------------------
+  #
+  # We will only run "sleep" here and pre-configure the credentials with the
+  # "minio" server.
+
+  minio-client:
+    <<: *service_default
+    container_name: minio-client
+    hostname: minio-client
+    depends_on:
+      - minio  # start after the server
+    image: "${image_mc_name:-quay.io/minio/mc}:\
+      ${image_mc_version:-latest}"
+    # Run with custom entrypoint that sets the alias "minio" with admin
+    # credentials, ensures that the "varfish" user and "varfish-server"
+    # buckets are created, and then sleeps forever.
+    entrypoint: /opt/minio-utils/entrypoint-override.sh
+    secrets:
+      - minio-root-password
+      - minio-varfish-password
+    volumes:
+      - type: bind
+        source: ./utils/minio-utils
+        target: /opt/minio-utils
+        read_only: true
 
 # == Secrets ================================================================
 
 secrets:
-  # The database password is configured via environment variable DB_PASSWORD.
+  # The PostgreSQL database password.
   db-password:
     file: ${secrets_basedir:-./secrets}/db-password
+  # The secrets for the root (=minioadmin) user on the MinIO server.
+  minio-root-password:
+    file: ${secrets_basedir:-./secrets}/minio-root-password
+  # The secrets for the varfish user on the MinIO server.
+  minio-varfish-password:
+    file: ${secrets_basedir:-./secrets}/minio-varfish-password
 
 
 # == Networks ================================================================
