@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p .ci/volumes/postgres/data
           mkdir -p .ci/volumes/redis/data
+          mkdir -p .ci/volumes/minio/data
           mkdir -p .ci/volumes/varfish-static/data
 
       - name: Bring up and shut down services
