@@ -35,7 +35,7 @@ jobs:
           mkdir -p .ci/volumes/varfish-static/data
 
       - name: Bring up and shut down services
-        uses: isbang/compose-action@v1
+        uses: isbang/compose-action@v1.4.1
         with:
           compose-file: docker-compose.yml
           compose-flags: |
