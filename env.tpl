@@ -1,4 +1,4 @@
-# Docker Compose environment file used in CI.
+# Template for an .env file.
 
 # -- Docker Images -----------------------------------------------------------
 
@@ -62,11 +62,7 @@
 # -- General Container Configuration -----------------------------------------
 
 # Base directory for volumes.
-# volumes_basedir: ./volumes
-## In CI: set to a directory with minimal data for spinning up the containers.
-volumes_basedir=./.ci/volumes
+# volumes_basedir: ./.dev/volumes
 
 # Base directory for secrets.
-# secrets_basedir: ./secrets
-## In CI: set to a directory where the `ci.yml` writes data to.
-secrets_basedir=./.ci/secrets
+# secrets_basedir: ./.dev/secrets

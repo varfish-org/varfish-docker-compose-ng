@@ -17,7 +17,7 @@ x-service-default: &service_default
 x-service-varfish-default: &service_varfish_default
   volumes:
     - type: bind
-      source: ${volumes_basedir:-.}/varfish-static/data
+      source: ${volumes_basedir:-./.dev/volumes}/varfish-static/data
       target: /data
       read_only: true
 
@@ -67,7 +67,7 @@ services:
     container_name: mehari
     hostname: mehari
     image: "${image_base:-ghcr.io/bihealth}/${image_mehari_name:-mehari}:\
-      ${image_mehari_version:-0.5}"
+      ${image_mehari_version:-latest}"
 
   # -- Viguno ----------------------------------------------------------------
   #
@@ -79,7 +79,7 @@ services:
     container_name: viguno
     hostname: viguno
     image: "${image_base:-ghcr.io/bihealth}/${image_viguno_name:-viguno}:\
-      ${image_viguno_version:-0.1}"
+      ${image_viguno_version:-latest}"
 
   # -- Annonars ---------------------------------------------------------------
   #
@@ -89,8 +89,8 @@ services:
     <<: *service_varfish_default
     container_name: annonars
     hostname: annonars
-    image: "${image_base:-ghcr.io/bihealth}/${image_annonars_name:-annona-rs}:\
-      ${image_annonars_version:-0.12.4}"
+    image: "${image_base:-ghcr.io/bihealth}/${image_annonars_name:-annonars}:\
+      ${image_annonars_version:-latest}"
 
   # -- PostgreSQL Server -----------------------------------------------------
   #
@@ -110,7 +110,7 @@ services:
       - db-password
     volumes:
       - type: bind
-        source: ${volumes_basedir:-.}/postgres/data
+        source: ${volumes_basedir:-./.dev/volumes}/postgres/data
         target: /var/lib/postgresql/data
 
   # -- Redis -----------------------------------------------------------------
@@ -125,7 +125,7 @@ services:
     image: ${image_redis_name:-redis}:${image_redis_version:-6}
     volumes:
       - type: bind
-        source: ${volumes_basedir:-.}/redis/data
+        source: ${volumes_basedir:-./.dev/volumes}/redis/data
         target: /data
 
   # -- Minio (Server) --------------------------------------------------------
@@ -156,8 +156,8 @@ services:
       - minio-root-password
     # Uncomment the following two lines (reminder: "HOST:CONTAINER") to
     # enable access to the console from the host.
-    ports:
-      - "9001:9001"
+    # ports:
+    #   - "9001:9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -165,7 +165,7 @@ services:
       retries: 3
     volumes:
       - type: bind
-        source: ${volumes_basedir:-.}/minio/data
+        source: ${volumes_basedir:-./.dev/volumes}/minio/data
         target: /data
 
   # -- Minio (Client) --------------------------------------------------------
@@ -199,13 +199,13 @@ services:
 secrets:
   # The PostgreSQL database password.
   db-password:
-    file: ${secrets_basedir:-./secrets}/db-password
+    file: ${secrets_basedir:-./.dev/secrets}/db-password
   # The secrets for the root (=minioadmin) user on the MinIO server.
   minio-root-password:
-    file: ${secrets_basedir:-./secrets}/minio-root-password
+    file: ${secrets_basedir:-./.dev/secrets}/minio-root-password
   # The secrets for the varfish user on the MinIO server.
   minio-varfish-password:
-    file: ${secrets_basedir:-./secrets}/minio-varfish-password
+    file: ${secrets_basedir:-./.dev/secrets}/minio-varfish-password
 
 
 # == Networks ================================================================

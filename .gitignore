@@ -1,5 +1,8 @@
+## Demo
+/.dev
+
 ## CI
-/.ci/volumes
+/.ci
 
 ## Docker Compose
 # Configuration file.
