@@ -13,7 +13,7 @@ We recommend the `s5cmd` tool as it is easy to install, use, and fast.
 You can download it from [github.com/peak/s5cmd/releases](https://github.com/peak/s5cmd/releases).
 For example:
 
-```
+```bash session
 $ wget -O /tmp/s5cmd_2.1.0_Linux-64bit.tar.gz \
     https://github.com/peak/s5cmd/releases/download/v2.1.0/s5cmd_2.1.0_Linux-64bit.tar.gz
 $ tar -C /tmp -xf /tmp/s5cmd_2.1.0_Linux-64bit.tar.gz
@@ -28,7 +28,7 @@ Instructions can be found [here on the Docker.com website](https://docs.docker.c
 
 First, clone the repository:
 
-```
+```bash session
 $ git clone git@github.com:bihealth/varfish-docker-compose-ng.git
 ```
 
@@ -39,13 +39,13 @@ In a production deployment, these directories should live outside of the checkou
 
 Now, we create the directories for data storage.
 
-```
+```bash session
 $ mkdir -p .dev/volumes/{minio,varfish-static}/data
 ```
 
 Next, we setup some "secrets" for the passwords.
 
-```
+```bash session
 $ mkdir -p .dev/secrets
 $ echo db-password >.dev/secrets/db-password
 $ echo minio-root-password >.dev/secrets/minio-root-password
@@ -54,7 +54,7 @@ $ echo minio-varfish-password >.dev/secrets/minio-varfish-password
 
 We now copy the `env.tpl` file to the default location for the environment `.env`.
 
-```
+```bash session
 $ cp env.tpl .env
 ```
 
@@ -62,7 +62,7 @@ Next, create a `docker-compose.override.yml` with the contents of the file `dock
 This will disable everything that we assume is running on your host when you are developing.
 This includes the VarFish web server, redis, celery workers, postgres.
 
-```
+```bash session
 $ cp docker-compose.override.yml-dev docker-compose.override.yml
 ```
 
@@ -72,7 +72,7 @@ Now you need to obtain the data to serve by the mehari, viguno, and annonars con
 For this, we have prepared strongly reduced data sets (overall less than 2GB rather than hundreds of GB of data).
 Obtain the annonars data:
 
-```
+```bash session
 $ mkdir -p .dev/volumes/varfish-static/data/download
 $ SRC_DST="
   full/annonars/gnomad-mtdna-grch37-3.1+0.12.7/*:annonars/gnomad-mtdna-grch37-3.1+0.12.7
@@ -104,7 +104,7 @@ $ (set -x; for src_dst in $SRC_DST; do \
 
 Setup symlink structure so the data is at the expected location.
 
-```
+```bash session
 ##
 ## annonars
 ##
@@ -227,7 +227,7 @@ ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-segdup-grch38-*/
 
 To create an in-house database:
 
-```
+```bash session
 varfish-server-worker db mk-inhouse \
   --path-output-tsv /tmp/inhouse.tsv \
   $(find YOUR_PATH -name '*.gts.tsv.gz' | sort)
@@ -243,7 +243,7 @@ varfish-server-worker db to-bin \
 
 Now, you can bring up the docker compose environment (stop with `Ctrl+C`).
 
-```
+```bash session
 $ docker compose up
 ```
 
@@ -304,14 +304,14 @@ On startup, the `minio-client` container will automatically create a user `varfi
 Further, it will create a bucket `varfish-server` and give read/write access to the bucket for the user `varfish`.
 This is the account that VarFish will use to store data in the bucket.
 
-```
+```bash session
 $ docker-compose exec -it minio-client bash -i
 ```
 
 The alias `minio` is pre-configured to point to the MinIO server.
 For example
 
-```
+```bash session
 host $ docker exec -it minio-client bash -i
 [root@minio-client /]# mc ls minio
 [2023-06-20 15:09:08 UTC]     0B varfish-server/
@@ -327,7 +327,7 @@ MemberOf: []
 You can create new users, e.g., for uploading data, as follows.
 Note that `the-user` corresponds to an S3 access key while `THE_PASSWORD` corresponds to an S3 secret key.
 
-```
+```bash session
 host $ docker exec -it minio-client bash -i
 [root@minio-client /]# mc mb minio/the-bucket
 Bucket created successfully `minio/the-bucket`.
@@ -367,16 +367,16 @@ To User: the-user
 
 ### Managing GitHub Project with Terraform
 
-```
-# export GITHUB_OWNER=bihealth
-# export GITHUB_TOKEN=ghp_<thetoken>
+```bash session
+$ export GITHUB_OWNER=bihealth
+$ export GITHUB_TOKEN=ghp_<thetoken>
 
-# cd utils/terraform
-# terraform init
-# terraform import github_repository.varfish-docker-compose-ng varfish-docker-compose-ng
+$ cd utils/terraform
+$ terraform init
+$ terraform import github_repository.varfish-docker-compose-ng varfish-docker-compose-ng
 
-# terraform validate
-# terraform fmt
-# terraform plan
-# terraform apply
+$ terraform validate
+$ terraform fmt
+$ terraform plan
+$ terraform apply
 ```
