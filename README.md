@@ -75,14 +75,19 @@ Obtain the annonars data:
 ```
 $ mkdir -p .dev/volumes/varfish-static/data/download
 $ SRC_DST="
-  reduced-dev/annonars/*:annonars
-  reduced-dev/viguno/*:viguno
-  full/worker/genes-xlink-20230624/genes-xlink.tsv:genes-xlink-20230624
   full/annonars/gnomad-mtdna-grch37-3.1+0.12.7/*:annonars/gnomad-mtdna-grch37-3.1+0.12.7
   full/annonars/gnomad-mtdna-grch38-3.1+0.12.7/*:annonars/gnomad-mtdna-grch38-3.1+0.12.7
   full/annonars/helixmtdb-grch37-20200327+0.12.7/*:annonars/helixmtdb-grch37-20200327+0.12.7
   full/annonars/helixmtdb-grch38-20200327+0.12.7/*:annonars/helixmtdb-grch38-20200327+0.12.7
   full/annonars/genes-3.1+2.1.1+4.4+20230624+0.7.0/*:annonars/genes-3.1+2.1.1+4.4+20230624+0.7.0
+  full/mehari/genes-txs-grch37-0.2.2/*:mehari/genes-txs-grch37-0.2.2
+  full/mehari/genes-txs-grch38-0.2.2/*:mehari/genes-txs-grch38-0.2.2
+  full/mehari/genes-xlink-20230624:mehari/genes-xlink-20230624
+  full/tracks/*:tracks
+  full/worker/*:worker
+  reduced-dev/annonars/*:annonars
+  reduced-dev/mehari/*:mehari
+  reduced-dev/viguno/*:viguno
 "
 $ (set -x; for src_dst in $SRC_DST; do \
     src=$(echo $src_dst | cut -d : -f 1); \
@@ -100,38 +105,114 @@ $ (set -x; for src_dst in $SRC_DST; do \
 Setup symlink structure so the data is at the expected location.
 
 ```
-$ ln -sr .dev/volumes/varfish-static/data/download/genes-xlink-20230624/genes-xlink.tsv \
-    .dev/volumes/varfish-static/data/hgnc_xlink.tsv
-$ ln -sr .dev/volumes/varfish-static/data/download/viguno/hpo-20230606+0.1.6 \
-    .dev/volumes/varfish-static/data/hpo
+##
+## annonars
+##
 
-$ mkdir -p .dev/volumes/varfish-static/data/annonars
-$ ln -sr .dev/volumes/varfish-static/data/download/genes-xlink-20230624 \
-    .dev/volumes/varfish-static/data/annonars/genes
+mkdir -p .dev/volumes/varfish-static/data/annonars
 
-$ names="cadd dbsnp dbnsfp dbscsnv gnomad-mtdna gnomad-genomes gnomad-exomes helixmtdb cons"; \
-  for genome in grch37 grch38; do \
-    for name in $names; do \
-      mkdir -p .dev/volumes/varfish-static/data/annonars/$genome; \
-      test -e .dev/volumes/varfish-static/data/$genome/$name || \
-        ln -sr \
-          $(echo .dev/volumes/varfish-static/data/download/annonars/$name-$genome-* \
-            | tr ' ' '\n' \
-            | tail -n 1) \
-          .dev/volumes/varfish-static/data/annonars/$genome/$name; \
-    done; \
-  done
+ln -Tsr .dev/volumes/varfish-static/data/download/genes-xlink-* \
+  .dev/volumes/varfish-static/data/annonars/genes
+
+names="cadd dbsnp dbnsfp dbscsnv gnomad-mtdna gnomad-genomes gnomad-exomes helixmtdb cons"; \
+for genome in grch37 grch38; do \
+  for name in $names; do \
+    mkdir -p .dev/volumes/varfish-static/data/annonars/$genome; \
+    test -e .dev/volumes/varfish-static/data/$genome/$name || \
+      ln -Tsr \
+        $(echo .dev/volumes/varfish-static/data/download/annonars/$name-$genome-* \
+          | tr ' ' '\n' \
+          | tail -n 1) \
+        .dev/volumes/varfish-static/data/annonars/$genome/$name; \
+  done; \
+done
+
+##
+## mehari
+##
+
+mkdir -p .dev/volumes/varfish-static/data/mehari/grch3{7,8}
+
+ln -Tsr .dev/volumes/varfish-static/data/download/mehari/genes-txs-grch37-*/mehari-data-txs-grch37-*in.zst \
+  .dev/volumes/varfish-static/data/mehari/grch37
+ln -Tsr .dev/volumes/varfish-static/data/download/mehari/freqs-grch37-* \
+  .dev/volumes/varfish-static/data/mehari/grch37/freqs
+ln -Tsr .dev/volumes/varfish-static/data/download/mehari/genes-txs-grch38-*/mehari-data-txs-grch38-*.bin.zst \
+  .dev/volumes/varfish-static/data/mehari/grch38
+ln -Tsr .dev/volumes/varfish-static/data/download/mehari/freqs-grch38-* \
+  .dev/volumes/varfish-static/data/mehari/grch38/freqs
+
+##
+## viguno
+##
+
+ln -Tsr .dev/volumes/varfish-static/data/download/mehari/genes-xlink-20230624/genes-xlink.tsv \
+  .dev/volumes/varfish-static/data/hgnc_xlink.tsv
+ln -Tsr .dev/volumes/varfish-static/data/download/viguno/hpo-20230606+0.1.6 \
+  .dev/volumes/varfish-static/data/hpo
+
+##
+## worker
+##
+
+mkdir -p .dev/volumes/varfish-static/data/worker/{grch3{7,8}/strucvars/bgdbs,noref/genes}
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-exac-grch37-*/bgdb-exac.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/exac.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-g1k-grch37-phase3v2+0.7.0/bgdb-g1k.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/g1k.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-gnomad-grch37-*/bgdb-gnomad.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/gnomad.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-dbvar-grch37-*/bgdb-dbvar.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/dbvar.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-dbvar-grch38-*/bgdb-dbvar.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/strucvars/bgdbs/dbvar.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-dgv-grch37-*/bgdb-dgv.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/dgv.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-dgv-grch38-*/bgdb-dgv.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/strucvars/bgdbs/dgv.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-dgv-gs-grch37-*/bgdb-dgv-gs.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/dgv-gs.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-dgv-gs-grch38-*/bgdb-dgv-gs.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/strucvars/bgdbs/dgv-gs.bin
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/clinvar-strucvars-grch37-*/clinvar-strucvars.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/clinvar.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/clinvar-strucvars-grch38-*/clinvar-strucvars.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/strucvars/clinvar.bin
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/patho-mms-grch37-*/patho-mms.bed \
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/patho-mms.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/patho-mms-grch38-*/patho-mms.bed \
+  .dev/volumes/varfish-static/data/worker/grch38/strucvars/patho-mms.bin
+
+mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/genes
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/tads-grch37-dixon2015/hesc.bed \
+  .dev/volumes/varfish-static/data/worker/grch37/tads/hesc.bed
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/tads-grch38-dixon2015/hesc.bed \
+  .dev/volumes/varfish-static/data/worker/grch38/tads/hesc.bed
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/noref/genes-xlink-*/genes-xlink.bin \
+  .dev/volumes/varfish-static/data/worker/noref/genes/xlink.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/acmg-sf-*/acmg_sf.tsv \
+  .dev/volumes/varfish-static/data/worker/noref/genes/acmg.tsv
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/mim2gene-*/mim2gene.tsv \
+  .dev/volumes/varfish-static/data/worker/noref/genes/omim.tsv
+
+mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/genes
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch37-*/ensembl_genes.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/genes/ensembl_regions.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch38-*/ensembl_genes.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/genes/ensembl_regions.bin
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch37-*/refseq_genes.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/genes/refseq_regions.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch38-*/refseq_genes.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/genes/refseq_regions.bin
 ```
 
-The next step is to obtain the data for Mehari
-
-```
-$ mkdir -p .dev/volumes/varfish-static/data/mehari/grch3{7,8}
-$ wget -O .dev/volumes/varfish-static/data/mehari/grch37/txs.bin.zst \
-    https://github.com/bihealth/mehari-data-tx/releases/download/v0.2.2/mehari-data-txs-grch37-0.2.2.bin.zst
-$ wget -O .dev/volumes/varfish-static/data/mehari/grch38/txs.bin.zst \
-    https://github.com/bihealth/mehari-data-tx/releases/download/v0.2.2/mehari-data-txs-grch38-0.2.2.bin.zst
-```
 
 ### Startup and Check
 
