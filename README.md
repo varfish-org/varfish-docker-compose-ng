@@ -111,7 +111,7 @@ Setup symlink structure so the data is at the expected location.
 
 mkdir -p .dev/volumes/varfish-static/data/annonars
 
-ln -Tsr .dev/volumes/varfish-static/data/download/genes-xlink-* \
+ln -Tsr .dev/volumes/varfish-static/data/download/genes-* \
   .dev/volumes/varfish-static/data/annonars/genes
 
 names="cadd dbsnp dbnsfp dbscsnv gnomad-mtdna gnomad-genomes gnomad-exomes helixmtdb cons"; \
@@ -193,7 +193,7 @@ ln -Tsr .dev/volumes/varfish-static/data/download/worker/tads-grch37-dixon2015/h
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/tads-grch38-dixon2015/hesc.bed \
   .dev/volumes/varfish-static/data/worker/grch38/tads/hesc.bed
 
-ln -Tsr .dev/volumes/varfish-static/data/download/worker/noref/genes-xlink-*/genes-xlink.bin \
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-xlink-*/genes-xlink.bin \
   .dev/volumes/varfish-static/data/worker/noref/genes/xlink.bin
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/acmg-sf-*/acmg_sf.tsv \
   .dev/volumes/varfish-static/data/worker/noref/genes/acmg.tsv
@@ -211,6 +211,18 @@ ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch37-*/
   .dev/volumes/varfish-static/data/worker/grch37/genes/refseq_regions.bin
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch38-*/refseq_genes.bin \
   .dev/volumes/varfish-static/data/worker/grch38/genes/refseq_regions.bin
+
+mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/features
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-repeat-grch37-*/masked-repeat.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/features/masked_repeat.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-segdup-grch37-*/masked-segdup.bin \
+  .dev/volumes/varfish-static/data/worker/grch37/features/masked_seqdup.bin
+
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-repeat-grch38-*/masked-repeat.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/features/masked_repeat.bin
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-segdup-grch38-*/masked-segdup.bin \
+  .dev/volumes/varfish-static/data/worker/grch38/features/masked_seqdup.bin
 ```
 
 To create an in-house database:
