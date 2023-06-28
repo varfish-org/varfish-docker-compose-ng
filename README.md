@@ -186,7 +186,7 @@ ln -Tsr .dev/volumes/varfish-static/data/download/worker/patho-mms-grch37-*/path
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/patho-mms-grch38-*/patho-mms.bed \
   .dev/volumes/varfish-static/data/worker/grch38/strucvars/patho-mms.bin
 
-mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/genes
+mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/tads
 
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/tads-grch37-dixon2015/hesc.bed \
   .dev/volumes/varfish-static/data/worker/grch37/tads/hesc.bed
@@ -211,6 +211,19 @@ ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch37-*/
   .dev/volumes/varfish-static/data/worker/grch37/genes/refseq_regions.bin
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/genes-regions-grch38-*/refseq_genes.bin \
   .dev/volumes/varfish-static/data/worker/grch38/genes/refseq_regions.bin
+```
+
+To create an in-house database:
+
+```
+varfish-server-worker db mk-inhouse \
+  --path-output-tsv /tmp/inhouse.tsv \
+  $(find YOUR_PATH -name '*.gts.tsv.gz' | sort)
+
+varfish-server-worker db to-bin \
+  --input-type strucvar-inhouse \
+  --path-input /tmp/inhouse.tsv \
+  --path-output-bin .dev/volumes/varfish-static/data/worker/grch37/strucvars/inhouse.bin
 ```
 
 
