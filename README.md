@@ -111,7 +111,7 @@ Setup symlink structure so the data is at the expected location.
 
 mkdir -p .dev/volumes/varfish-static/data/annonars
 
-ln -Tsr .dev/volumes/varfish-static/data/download/genes-* \
+ln -Tsr .dev/volumes/varfish-static/data/download/annonars/genes-* \
   .dev/volumes/varfish-static/data/annonars/genes
 
 names="cadd dbsnp dbnsfp dbscsnv gnomad-mtdna gnomad-genomes gnomad-exomes helixmtdb cons"; \
