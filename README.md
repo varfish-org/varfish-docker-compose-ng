@@ -94,7 +94,7 @@ $ (set -x; for src_dst in $SRC_DST; do \
     dst=$(echo $src_dst | cut -d : -f 2); \
     mkdir -p .dev/volumes/varfish-static/data/download/$dst; \
     s5cmd \
-      --endpoint-url=https://ceph-s3-ext.cubi.bihealth.org \
+      --endpoint-url=https://ceph-s3-public.cubi.bihealth.org \
       --no-sign-request \
       sync \
         "s3://varfish-public/$src" \
