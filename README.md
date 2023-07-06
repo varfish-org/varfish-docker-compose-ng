@@ -223,6 +223,30 @@ ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-repeat-grch38-*/
   .dev/volumes/varfish-static/data/worker/grch38/features/masked_repeat.bin
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/masked-segdup-grch38-*/masked-segdup.bin \
   .dev/volumes/varfish-static/data/worker/grch38/features/masked_seqdup.bin
+
+##
+## tracks
+##
+
+mkdir -p .dev/volumes/varfish-static/data/nginx/grch3{7,8}
+
+paths_37=$(find .dev/volumes/varfish-static/data/download/tracks/ -type f -name '*.bed' -or -name '*.bed.gz' | sort | grep grch37)
+for path in $paths_37; do
+  if [[ -e ${path}.tbi ]]; then
+    ln -sr $path ${path}.tbi .dev/volumes/varfish-static/data/nginx/grch37
+  else
+    ln -sr $path .dev/volumes/varfish-static/data/nginx/grch37
+  fi
+done
+
+paths_38=$(find .dev/volumes/varfish-static/data/download/tracks/ -type f -name '*.bed' -or -name '*.bed.gz' | sort | grep grch38)
+for path in $paths_38; do
+  if [[ -e ${path}.tbi ]]; then
+    ln -sr $path ${path}.tbi .dev/volumes/varfish-static/data/nginx/grch38
+  else
+    ln -sr $path .dev/volumes/varfish-static/data/nginx/grch38
+  fi
+done
 ```
 
 To create an in-house database:
