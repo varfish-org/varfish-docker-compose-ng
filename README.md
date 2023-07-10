@@ -14,10 +14,10 @@ You can download it from [github.com/peak/s5cmd/releases](https://github.com/pea
 For example:
 
 ```bash session
-$ wget -O /tmp/s5cmd_2.1.0_Linux-64bit.tar.gz \
+wget -O /tmp/s5cmd_2.1.0_Linux-64bit.tar.gz \
     https://github.com/peak/s5cmd/releases/download/v2.1.0/s5cmd_2.1.0_Linux-64bit.tar.gz
-$ tar -C /tmp -xf /tmp/s5cmd_2.1.0_Linux-64bit.tar.gz
-$ sudo cp /tmp/s5cmd /usr/local/bin/
+tar -C /tmp -xf /tmp/s5cmd_2.1.0_Linux-64bit.tar.gz
+sudo cp /tmp/s5cmd /usr/local/bin/
 ```
 
 You will need to install Docker Compose.
@@ -29,7 +29,7 @@ Instructions can be found [here on the Docker.com website](https://docs.docker.c
 First, clone the repository:
 
 ```bash session
-$ git clone git@github.com:bihealth/varfish-docker-compose-ng.git
+git clone git@github.com:bihealth/varfish-docker-compose-ng.git
 ```
 
 From here on, the commands should be executed from within this repository (`cd varfish-docker-compose-ng`).
@@ -40,22 +40,22 @@ In a production deployment, these directories should live outside of the checkou
 Now, we create the directories for data storage.
 
 ```bash session
-$ mkdir -p .dev/volumes/{minio,varfish-static}/data
+mkdir -p .dev/volumes/{minio,varfish-static}/data
 ```
 
 Next, we setup some "secrets" for the passwords.
 
 ```bash session
-$ mkdir -p .dev/secrets
-$ echo db-password >.dev/secrets/db-password
-$ echo minio-root-password >.dev/secrets/minio-root-password
-$ echo minio-varfish-password >.dev/secrets/minio-varfish-password
+mkdir -p .dev/secrets
+echo db-password >.dev/secrets/db-password
+echo minio-root-password >.dev/secrets/minio-root-password
+echo minio-varfish-password >.dev/secrets/minio-varfish-password
 ```
 
 We now copy the `env.tpl` file to the default location for the environment `.env`.
 
 ```bash session
-$ cp env.tpl .env
+cp env.tpl .env
 ```
 
 Next, create a `docker-compose.override.yml` with the contents of the file `docker-compose.override.yml-dev`.
@@ -63,7 +63,7 @@ This will disable everything that we assume is running on your host when you are
 This includes the VarFish web server, redis, celery workers, postgres.
 
 ```bash session
-$ cp docker-compose.override.yml-dev docker-compose.override.yml
+cp docker-compose.override.yml-dev docker-compose.override.yml
 ```
 
 ### Download Dev Data
@@ -73,33 +73,33 @@ For this, we have prepared strongly reduced data sets (overall less than 2GB rat
 Obtain the annonars data:
 
 ```bash session
-$ mkdir -p .dev/volumes/varfish-static/data/download
-$ SRC_DST="
-  full/annonars/gnomad-mtdna-grch37-3.1+0.12.7/*:annonars/gnomad-mtdna-grch37-3.1+0.12.7
-  full/annonars/gnomad-mtdna-grch38-3.1+0.12.7/*:annonars/gnomad-mtdna-grch38-3.1+0.12.7
-  full/annonars/helixmtdb-grch37-20200327+0.12.7/*:annonars/helixmtdb-grch37-20200327+0.12.7
-  full/annonars/helixmtdb-grch38-20200327+0.12.7/*:annonars/helixmtdb-grch38-20200327+0.12.7
-  full/annonars/genes-3.1+2.1.1+4.4+20230624+0.7.0/*:annonars/genes-3.1+2.1.1+4.4+20230624+0.7.0
-  full/mehari/genes-txs-grch37-0.2.2/*:mehari/genes-txs-grch37-0.2.2
-  full/mehari/genes-txs-grch38-0.2.2/*:mehari/genes-txs-grch38-0.2.2
-  full/mehari/genes-xlink-20230624:mehari/genes-xlink-20230624
-  full/tracks/*:tracks
-  full/worker/*:worker
-  reduced-dev/annonars/*:annonars
-  reduced-dev/mehari/*:mehari
-  reduced-dev/viguno/*:viguno
+mkdir -p .dev/volumes/varfish-static/data/download
+SRC_DST="
+full/annonars/gnomad-mtdna-grch37-3.1+0.12.8/*:annonars/gnomad-mtdna-grch37-3.1+0.12.8
+full/annonars/gnomad-mtdna-grch38-3.1+0.12.8/*:annonars/gnomad-mtdna-grch38-3.1+0.12.8
+full/annonars/helixmtdb-grch37-20200327+0.12.8/*:annonars/helixmtdb-grch37-20200327+0.12.8
+full/annonars/helixmtdb-grch38-20200327+0.12.8/*:annonars/helixmtdb-grch38-20200327+0.12.8
+full/annonars/genes-3.1+2.1.1+4.4+20230624+0.7.0/*:annonars/genes-3.1+2.1.1+4.4+20230624+0.7.0
+full/mehari/genes-txs-grch37-0.2.2/*:mehari/genes-txs-grch37-0.2.2
+full/mehari/genes-txs-grch38-0.2.2/*:mehari/genes-txs-grch38-0.2.2
+full/mehari/genes-xlink-20230624:mehari/genes-xlink-20230624
+full/tracks/*:tracks
+full/worker/*:worker
+reduced-dev/annonars/*:annonars
+reduced-dev/mehari/*:mehari
+reduced-dev/viguno/*:viguno
 "
-$ (set -x; for src_dst in $SRC_DST; do \
-    src=$(echo $src_dst | cut -d : -f 1); \
-    dst=$(echo $src_dst | cut -d : -f 2); \
-    mkdir -p .dev/volumes/varfish-static/data/download/$dst; \
-    s5cmd \
-      --endpoint-url=https://ceph-s3-public.cubi.bihealth.org \
-      --no-sign-request \
-      sync \
-        "s3://varfish-public/$src" \
-        ".dev/volumes/varfish-static/data/download/$dst"; \
-  done)
+(set -x; for src_dst in $SRC_DST; do \
+  src=$(echo $src_dst | cut -d : -f 1); \
+  dst=$(echo $src_dst | cut -d : -f 2); \
+  mkdir -p .dev/volumes/varfish-static/data/download/$dst; \
+  s5cmd \
+    --endpoint-url=https://ceph-s3-public.cubi.bihealth.org \
+    --no-sign-request \
+    sync \
+      "s3://varfish-public/$src" \
+      ".dev/volumes/varfish-static/data/download/$dst"; \
+done)
 ```
 
 Setup symlink structure so the data is at the expected location.
@@ -159,7 +159,7 @@ mkdir -p .dev/volumes/varfish-static/data/worker/{grch3{7,8}/strucvars/bgdbs,nor
 
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-exac-grch37-*/bgdb-exac.bin \
   .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/exac.bin
-ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-g1k-grch37-phase3v2+0.7.0/bgdb-g1k.bin \
+ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-g1k-grch37-phase3v2+0.9.0/bgdb-g1k.bin \
   .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/g1k.bin
 ln -Tsr .dev/volumes/varfish-static/data/download/worker/bgdb-gnomad-grch37-*/bgdb-gnomad.bin \
   .dev/volumes/varfish-static/data/worker/grch37/strucvars/bgdbs/gnomad.bin
@@ -276,7 +276,7 @@ cp utils/nginx/nginx.conf .dev/config/nginx
 Now, you can bring up the docker compose environment (stop with `Ctrl+C`).
 
 ```bash session
-$ docker compose up
+docker compose up
 ```
 
 To verify the results, have a look at the following URLs:
