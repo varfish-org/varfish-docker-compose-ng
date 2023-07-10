@@ -262,6 +262,14 @@ varfish-server-worker db to-bin \
   --path-output-bin .dev/volumes/varfish-static/data/worker/grch37/strucvars/inhouse.bin
 ```
 
+### Setup Configuration
+
+The next step step is to create the configuration files in `.dev/config`.
+
+```bash session
+mkdir -p .dev/config/nginx
+cp utils/nginx/nginx.conf .dev/config/nginx
+```
 
 ### Startup and Check
 

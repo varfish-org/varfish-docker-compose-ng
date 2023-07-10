@@ -59,7 +59,16 @@
 # Version of the "mc" (Minio client) image to use.
 # image_mc_version=latest
 
+# Name of the nginx image to use.
+# image_nginx_name=nginx
+
+# Version of the nginx image to use.
+# image_nginx_version=1
+
 # -- General Container Configuration -----------------------------------------
+
+# Base directory for configuration.
+# config_basedir: ./.dev/config
 
 # Base directory for volumes.
 # volumes_basedir: ./.dev/volumes

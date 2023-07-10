@@ -10,6 +10,7 @@
 #   - `3001` -- annonars
 #   - `3002` -- mehari
 #   - `3003` -- viguno
+#   - `3004` -- nginx
 #   - `3010` -- minio
 #   - `3011` -- minio console
 
@@ -28,6 +29,11 @@ services:
   viguno:
     ports:
       - "3003:8080"
+
+  # map nginx to port 3004
+  nginx:
+    ports:
+      - "3004:80"
 
   # map Minio S3 to port 9000 and console to 9001
   minio:
