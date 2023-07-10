@@ -58,6 +58,23 @@ services:
       # Mount Docker socket into container so traefik can react to events.
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
+  # -- nginx -----------------------------------------------------------------
+  #
+  # We serve static files such as browser tracks with nginx.
+
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    image: ${image_nginx_name:-nginx}:${image_nginx_version:-1}
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/varfish-static/data
+        target: /data
+        read_only: true
+      - type: bind
+        source: ${config_basedir:-./.dev/config}/nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+
   # -- Mehari ----------------------------------------------------------------
   #
   # Mehari provides the transcript-related information.
