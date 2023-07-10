@@ -11,7 +11,7 @@ set -euo pipefail
 # 2. Ensure that the user "varfish" exists.  Otherwise, create it with
 #    the password from `/run/secrets/minio-varfish-password`)
 # 3. Create the "varfish-server" bucket and give "varfish" user access.
-# 4. Finally, call "sleep infinity".
+# 4. Start a loop that sleeps/does nothing but can be shutdown gracefully.
 #
 # Root users on the host machine can then attach to this container as
 # follows and use the "mc" command to actually configure things, such
@@ -64,5 +64,5 @@ else
     >&2 echo "Bucket '$S3_BUCKET' already exists"
 fi
 
-# 4. Finally, call "sleep infinity".
-sleep infinity
+# 4. Finally, sleep with graceful shutdown enabled;
+set +x; trap exit INT TERM; while true; do sleep 1; done;
