@@ -16,4 +16,4 @@ docker-compose.override.yml
 /.vscode
 *~
 .*.sw?
-.idea
+.idea/
