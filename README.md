@@ -79,7 +79,7 @@ full/annonars/gnomad-mtdna-grch37-3.1+0.12.8/*:annonars/gnomad-mtdna-grch37-3.1+
 full/annonars/gnomad-mtdna-grch38-3.1+0.12.8/*:annonars/gnomad-mtdna-grch38-3.1+0.12.8
 full/annonars/helixmtdb-grch37-20200327+0.12.8/*:annonars/helixmtdb-grch37-20200327+0.12.8
 full/annonars/helixmtdb-grch38-20200327+0.12.8/*:annonars/helixmtdb-grch38-20200327+0.12.8
-full/annonars/genes-3.1+2.1.1+4.4+20230624+0.9.0/*:annonars/genes-3.1+2.1.1+4.4+20230624+0.9.0
+full/annonars/genes-3.1+2.1.1+4.4+20230606+10.1+20230828+0.16.0/*:annonars/genes-3.1+2.1.1+4.4+20230606+10.1+20230828+0.16.0
 full/mehari/genes-txs-grch37-0.2.2/*:mehari/genes-txs-grch37-0.2.2
 full/mehari/genes-txs-grch38-0.2.2/*:mehari/genes-txs-grch38-0.2.2
 full/mehari/genes-xlink-20230624/*:mehari/genes-xlink-20230624
@@ -281,10 +281,14 @@ docker compose up
 
 To verify the results, have a look at the following URLs:
 
-- Annonars database infos: http://127.0.0.1:3001/annos/db-info?genome-release=grch37
+- Annonars database infos: http://127.0.0.1:3001/annos/db-info?genome_release=grch37
+- Annonars gene info: http://0.0.0.0:3001/genes/info?hgnc_id=HGNC:12403
+- Annonars variant info: http://0.0.0.0:3001/annos/variant?genome_release=grch37&chromosome=17&pos=41244100&reference=G&alternative=A
 - Mehari impact prections: http://127.0.0.1:3002/tx/csq?genome-release=grch37&chromosome=17&position=48275363&reference=C&alternative=A
 - Viguno for TGDS: http://127.0.0.1:3003/hpo/genes?gene_symbol=TGDS
 - Nginx server with browser tracks http://127.0.0.1:3004/
+
+Note that the development subset only has variants for a few genes, including BRCA1 (the example above).
 
 You should also be able to access the MinIO console on:
 
