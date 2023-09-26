@@ -35,7 +35,7 @@ services:
     ports:
       - "3004:80"
 
-  # map Minio S3 to port 9000 and console to 9001
+  # map Minio S3 to port 3010 and console to 3011
   minio:
     ports:
       - "3010:9000"
