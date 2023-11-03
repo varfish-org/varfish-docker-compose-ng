@@ -182,9 +182,9 @@ ln -sr .dev/volumes/varfish-static/data/download/worker/clinvar-strucvars-grch38
   .dev/volumes/varfish-static/data/worker/grch38/strucvars/clinvar.bin
 
 ln -sr .dev/volumes/varfish-static/data/download/worker/patho-mms-grch37-*/patho-mms.bed \
-  .dev/volumes/varfish-static/data/worker/grch37/strucvars/patho-mms.bin
+  .dev/volumes/varfish-static/data/worker/grch37/strucvars/patho-mms.bed
 ln -sr .dev/volumes/varfish-static/data/download/worker/patho-mms-grch38-*/patho-mms.bed \
-  .dev/volumes/varfish-static/data/worker/grch38/strucvars/patho-mms.bin
+  .dev/volumes/varfish-static/data/worker/grch38/strucvars/patho-mms.bed
 
 mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/tads
 
@@ -198,7 +198,7 @@ ln -sr .dev/volumes/varfish-static/data/download/worker/genes-xlink-*/genes-xlin
 ln -sr .dev/volumes/varfish-static/data/download/worker/acmg-sf-*/acmg_sf.tsv \
   .dev/volumes/varfish-static/data/worker/noref/genes/acmg.tsv
 ln -sr .dev/volumes/varfish-static/data/download/worker/mim2gene-*/mim2gene.tsv \
-  .dev/volumes/varfish-static/data/worker/noref/genes/omim.tsv
+  .dev/volumes/varfish-static/data/worker/noref/genes/mime2gene.tsv
 
 mkdir -p .dev/volumes/varfish-static/data/worker/grch3{7,8}/genes
 
