@@ -196,12 +196,12 @@ services:
     hostname: minio-client
     depends_on:
       - minio  # start after the server
-    image: "${image_mc_name:-quay.io/minio/mc}:\
+    image: "${image_mc_name:-bitnami/minio-client}:\
       ${image_mc_version:-latest}"
     # Run with custom entrypoint that sets the alias "minio" with admin
     # credentials, ensures that the "varfish" user and "varfish-server"
     # buckets are created, and then sleeps forever.
-    entrypoint: /opt/minio-utils/entrypoint-override.sh
+    entrypoint: bash -i /opt/minio-utils/entrypoint-override.sh
     secrets:
       - minio-root-password
       - minio-varfish-password

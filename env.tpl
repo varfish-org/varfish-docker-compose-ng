@@ -54,7 +54,7 @@
 # image_minio_version=latest
 
 # Name of the "mc" (Minio client) image to use.
-# image_mc_name=minio/mc
+# image_mc_name=bitnami/minio-client
 
 # Version of the "mc" (Minio client) image to use.
 # image_mc_version=latest
