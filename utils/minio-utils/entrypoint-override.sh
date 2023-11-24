@@ -37,7 +37,7 @@ S3_BUCKET=varfish-server
 mc alias set minio http://minio:9000 minioadmin $(cat /run/secrets/minio-root-password)
 
 # 2. Ensure that the user "varfish" exists.
-users=$(mc admin user list minio | egrep '^enabled\s+varfish' || true)
+users=$(mc admin user list minio | grep -e '^enabled\s+varfish' || true)
 if [ "$users" == "" ]; then
     >&2 echo "Creating user '$S3_USER'..."
     mc admin user add minio $S3_USER $(cat /run/secrets/minio-varfish-password)
@@ -46,10 +46,10 @@ else
 fi
 
 # 3. Create the "varfish-server" bucket and give "varfish" user access.
-buckets=$(mc ls minio | egrep "$S3_BUCKET/\$" || true)
+buckets=$(mc ls minio | grep -e "$S3_BUCKET/\$" || true)
 if [ "$buckets" == "" ]; then
     >&2 echo "Creating bucket '$S3_BUCKET'..."
-    mc mb minio/$S3_BUCKET
+    mc stat minio/$S3_BUCKET || mc mb minio/$S3_BUCKET
 
     >&2 echo "Create policy file that provides access for '$S3_USER' to '$S3_BUCKET'..."
     sed -e "s/__BUCKET__/$S3_BUCKET/g" $SCRIPT_DIR/bucket-user-policy.json.tpl \
