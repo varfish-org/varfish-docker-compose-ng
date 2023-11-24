@@ -108,13 +108,13 @@ full/annonars/regions-grch38-20231122+0.29.3
 # full/mehari/freqs-grch37-2.1.1+2.1.1+3.1+20200327+0.29.1
 # full/mehari/freqs-grch37-2.1.1+2.1.1+3.1+20200327+0.29.1
 full/mehari/genes-xlink-20231122
-full/tracks/*
-full/worker/*
+full/tracks
+full/worker
 # full/viguno/hpo-20230606+0.1.6
 ## -- reduced data for dev ---------------------------------------------------
-reduced-dev/annonars/*
-reduced-dev/mehari/*
-reduced-dev/viguno/*
+reduced-dev/annonars
+reduced-dev/mehari
+reduced-dev/viguno
 EOF
 STATIC=varfish-static
 mkdir -p .dev/volumes/$STATIC/data/download
@@ -126,7 +126,7 @@ mkdir -p .dev/volumes/$STATIC/data/download
     --endpoint-url=https://ceph-s3-public.cubi.bihealth.org \
     --no-sign-request \
     sync \
-      "s3://varfish-public/$src" \
+      "s3://varfish-public/$src/*" \
       ".dev/volumes/$STATIC/data/download/$dst"; \
 done)
 ```
