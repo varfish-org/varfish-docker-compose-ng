@@ -219,12 +219,17 @@ ln -sr .dev/volumes/$STATIC/data/download/worker/clinvar-strucvars-grch37-*/clin
 ln -sr .dev/volumes/$STATIC/data/download/worker/clinvar-strucvars-grch38-*/clinvar-strucvars.bin \
   .dev/volumes/$STATIC/data/worker/grch38/strucvars/clinvar.bin
 
-rm -f .dev/volumes/$STATIC/data/worker/grch3?/strucvars/patho-mms.bin
+rm -f .dev/volumes/$STATIC/data/worker/grch3?/strucvars/patho-mms.{bin,bed}
 
 ln -sr .dev/volumes/$STATIC/data/download/worker/patho-mms-grch37-*/patho-mms.bed \
   .dev/volumes/$STATIC/data/worker/grch37/strucvars/patho-mms.bed
 ln -sr .dev/volumes/$STATIC/data/download/worker/patho-mms-grch38-*/patho-mms.bed \
   .dev/volumes/$STATIC/data/worker/grch38/strucvars/patho-mms.bed
+# TODO: here, we need to remove the legacy *.bin file in the future
+ln -sr .dev/volumes/$STATIC/data/download/worker/patho-mms-grch37-*/patho-mms.bed \
+  .dev/volumes/$STATIC/data/worker/grch37/strucvars/patho-mms.bin
+ln -sr .dev/volumes/$STATIC/data/download/worker/patho-mms-grch38-*/patho-mms.bed \
+  .dev/volumes/$STATIC/data/worker/grch38/strucvars/patho-mms.bin
 
 mkdir -p .dev/volumes/$STATIC/data/worker/grch3{7,8}/tads
 rm -f .dev/volumes/$STATIC/data/worker/grch3?/tads/hesc.bed
@@ -242,6 +247,10 @@ ln -sr .dev/volumes/$STATIC/data/download/worker/acmg-sf-*/acmg_sf.tsv \
   .dev/volumes/$STATIC/data/worker/noref/genes/acmg.tsv
 ln -sr .dev/volumes/$STATIC/data/download/worker/mim2gene-*/mim2gene.tsv \
   .dev/volumes/$STATIC/data/worker/noref/genes/mime2gene.tsv
+# TODO: get rid of legacy omim.tsv
+ln -sr .dev/volumes/$STATIC/data/download/worker/mim2gene-*/mim2gene.tsv \
+  .dev/volumes/$STATIC/data/worker/noref/genes/omim.tsv
+
 
 mkdir -p .dev/volumes/$STATIC/data/worker/grch3{7,8}/genes
 rm -f .dev/volumes/$STATIC/data/worker/grch3?/genes/{ensembl_genes.bin,refseq_genes.bin}
@@ -268,6 +277,17 @@ ln -sr .dev/volumes/$STATIC/data/download/worker/masked-repeat-grch38-*/masked-r
   .dev/volumes/$STATIC/data/worker/grch38/features/masked_repeat.bin
 ln -sr .dev/volumes/$STATIC/data/download/worker/masked-segdup-grch38-*/masked-segdup.bin \
   .dev/volumes/$STATIC/data/worker/grch38/features/masked_seqdup.bin
+
+## create legacy dataset for the dated worker (v0.10.2)
+## TODO: later get rid of this
+
+mkdir -p .dev/volumes/$STATIC/data/worker-data-0.10.2/mehari/{grch37,grch38}
+ln -sr .dev/volumes/$STATIC/data/worker \
+  .dev/volumes/$STATIC/data/worker-data-0.10.2
+wget -O .dev/volumes/$STATIC/data/worker-data-0.10.2/mehari/grch37/txs.bin.zst \
+    https://github.com/bihealth/mehari-data-tx/releases/download/v0.2.2/mehari-data-txs-grch37-0.2.2.bin.zst
+wget -O .dev/volumes/$STATIC/data/worker-data-0.10.2/mehari/grch38/txs.bin.zst \
+    https://github.com/bihealth/mehari-data-tx/releases/download/v0.2.2/mehari-data-txs-grch38-0.2.2.bin.zst
 
 ##
 ## tracks
