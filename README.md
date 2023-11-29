@@ -303,16 +303,16 @@ STATIC=varfish-static
 mkdir -p .dev/volumes/$STATIC/data/download/mehari-data-txs-grch3{7,8}
 
 for ext in .zst .zst.sha256 .zst.report .zst.report.sha256; do
-  wget -O .dev/volumes/$STATIC/data/download/mehari-data-txs-grch37/mehari-data-txs-grch37-0.4.1.bin$ext \
-    https://github.com/bihealth/mehari-data-tx/releases/download/v0.4.1/mehari-data-txs-grch37-0.4.1.bin$ext
-  wget -O .dev/volumes/$STATIC/data/download/mehari-data-txs-grch38/mehari-data-txs-grch38-0.4.1.bin$ext \
-    https://github.com/bihealth/mehari-data-tx/releases/download/v0.4.1/mehari-data-txs-grch37-0.4.1.bin$ext
+  wget -O .dev/volumes/$STATIC/data/download/mehari-data-txs-grch37/mehari-data-txs-grch37-0.4.2.bin$ext \
+    https://github.com/bihealth/mehari-data-tx/releases/download/v0.4.2/mehari-data-txs-grch37-0.4.2.bin$ext
+  wget -O .dev/volumes/$STATIC/data/download/mehari-data-txs-grch38/mehari-data-txs-grch38-0.4.2.bin$ext \
+    https://github.com/bihealth/mehari-data-tx/releases/download/v0.4.2/mehari-data-txs-grch37-0.4.2.bin$ext
 done
 
 rm -f .dev/volumes/$STATIC/data/mehari/grch3?/txs.bin.zst
-ln -sr .dev/volumes/$STATIC/data/download/mehari-data-txs-grch37/mehari-data-txs-grch37-0.4.1.bin.zst \
+ln -sr .dev/volumes/$STATIC/data/download/mehari-data-txs-grch37/mehari-data-txs-grch37-0.4.2.bin.zst \
   .dev/volumes/$STATIC/data/mehari/grch37/txs.bin.zst
-ln -sr .dev/volumes/$STATIC/data/download/mehari-data-txs-grch38/mehari-data-txs-grch38-0.4.1.bin.zst \
+ln -sr .dev/volumes/$STATIC/data/download/mehari-data-txs-grch38/mehari-data-txs-grch38-0.4.2.bin.zst \
   .dev/volumes/$STATIC/data/mehari/grch38/txs.bin.zst
 ```
 
@@ -331,39 +331,38 @@ varfish-server-worker db to-bin \
   --path-output-bin .dev/volumes/$STATIC/data/worker/grch37/strucvars/inhouse.bin
 ```
 
-To obtain ClinVar
+To obtain ClinVar, use the following.
 Note that this will install the data from November 12, 2023 and you might want to [look here for the latest release](https://github.com/bihealth/annonars-data-clinvar/releases).
 
 ```bash session
 STATIC=varfish-static
 
-wget -O /tmp/annonars-clinvar-minimal-grch37-20231112+0.25.0.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-20231112/annonars-clinvar-minimal-grch37-20231112+0.25.0.tar.gz
-wget -O /tmp/annonars-clinvar-minimal-grch38-20231112+0.25.0.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-20231112/annonars-clinvar-minimal-grch38-20231112+0.25.0.tar.gz
+wget -O /tmp/annonars-clinvar-minimal-grch37-20231112+0.29.3.tar.gz \
+  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-20231112/annonars-clinvar-minimal-grch37-20231112+0.29.3.tar.gz
+wget -O /tmp/annonars-clinvar-minimal-grch38-20231112+0.29.3.tar.gz \
+  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-20231112/annonars-clinvar-minimal-grch38-20231112+0.29.3.tar.gz
 
 tar -C .dev/volumes/$STATIC/data/download/annonars/ \
-  -xf /tmp/annonars-clinvar-minimal-grch37-20231112+0.25.0.tar.gz
+  -xf /tmp/annonars-clinvar-minimal-grch37-20231112+0.29.3.tar.gz
 tar -C .dev/volumes/$STATIC/data/download/annonars \
-  -xf /tmp/annonars-clinvar-minimal-grch38-20231112+0.25.0.tar.gz
+  -xf /tmp/annonars-clinvar-minimal-grch38-20231112+0.29.3.tar.gz
 
 rm -f .dev/volumes/$STATIC/data/annonars/grch37/clinvar
-ln -sr .dev/volumes/$STATIC/data/download/annonars/annonars-clinvar-minimal-grch37-20231112+0.25.0 \
+ln -sr .dev/volumes/$STATIC/data/download/annonars/annonars-clinvar-minimal-grch37-20231112+0.29.3 \
   .dev/volumes/$STATIC/data/annonars/grch37/clinvar
 rm -f .dev/volumes/$STATIC/data/annonars/grch38/clinvar
-ln -sr .dev/volumes/$STATIC/data/download/annonars/annonars-clinvar-minimal-grch38-20231112+0.25.0 \
+ln -sr .dev/volumes/$STATIC/data/download/annonars/annonars-clinvar-minimal-grch38-20231112+0.29.3 \
   .dev/volumes/$STATIC/data/annonars/grch38/clinvar
 
-wget -O /tmp/annonars-clinvar-genes-20231112+0.25.0.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-20231112/annonars-clinvar-genes-20231112+0.25.0.tar.gz
+wget -O /tmp/annonars-clinvar-genes-20231112+0.29.3.tar.gz \
+  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-20231112/annonars-clinvar-genes-20231112+0.29.3.tar.gz
 tar -C .dev/volumes/$STATIC/data/download/annonars \
-  -xf /tmp/annonars-clinvar-genes-20231112+0.25.0.tar.gz
+  -xf /tmp/annonars-clinvar-genes-20231112+0.29.3.tar.gz
 
 rm -f .dev/volumes/$STATIC/data/annonars/clinvar-genes
-ln -sr .dev/volumes/$STATIC/data/download/annonars/annonars-clinvar-genes-20231112+0.25.0 \
+ln -sr .dev/volumes/$STATIC/data/download/annonars/annonars-clinvar-genes-20231112+0.29.3 \
   .dev/volumes/$STATIC/data/annonars/clinvar-genes
 ```
-
 
 ### Setup Configuration
 
