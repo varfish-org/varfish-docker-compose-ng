@@ -56,7 +56,7 @@ We now copy the `env.tpl` file to the default location for the environment `.env
 
 ```bash session
 cp env.tpl .env
-``-
+```
 
 Next, create a `docker-compose.override.yml` with the contents of the file `docker-compose.override.yml-dev`.
 This will disable everything that we assume is running on your host when you are developing.
