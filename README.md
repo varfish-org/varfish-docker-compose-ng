@@ -52,7 +52,6 @@ echo minio-root-password >.prod/secrets/minio-root-password
 echo minio-varfish-password >.prod/secrets/minio-varfish-password
 ```
 
-
 Also, setup a secret for the web server sessions:
 
 ```bash session
