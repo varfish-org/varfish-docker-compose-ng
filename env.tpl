@@ -12,8 +12,7 @@ POSTGRES_HOST=postgres
 DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}"
 
 DJANGO_ALLOWED_HOSTS="*"
-# TODO: move this to a DJANGO_SECRET_KEY_FILE
-DJANGO_SECRET_KEY="__DJANGO_SECRET_KEY__"  # keep secure and secret
+DJANGO_SECRET_KEY_FILE=/run/secrets/varfish-server-django-secret-key
 DJANGO_SETTINGS_MODULE="config.settings.production"
 
 CELERY_BROKER_URL=redis://redis:6379/0
@@ -27,8 +26,7 @@ VARFISH_EXOMISER_PRIORITISER_API_URL=http://exomiser-rest-prioritiser:80/exomise
 
 VARFISH_USE_S3=1
 AWS_ACCESS_KEY_ID=varfish
-# TODO: move this to a AWS_SECRET_ACCESS_KEY_FILE
-AWS_SECRET_ACCESS_KEY=__AWS_SECRET_ACCESS_KEY__
+AWS_SECRET_ACCESS_KEY_FILE=/run/secrets/minio-varfish-password
 AWS_STORAGE_BUCKET_NAME=varfish-server
 AWS_S3_ENDPOINT_URL=http://minio:9000
 
