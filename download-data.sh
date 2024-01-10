@@ -17,7 +17,7 @@ export DRY_RUN=${DRY_RUN-0}
 # Download options: reduced-dev (default), reduced-exomes, full.
 export DOWNLOAD=${DOWNLOAD-reduced-dev}
 # Directory for static data.
-export STATIC_DIR=${STATIC_DIR-reev-static}
+export STATIC_DIR=${STATIC_DIR-varfish-static}
 # Overall directory prefix.
 export DIR_PREFIX=${DIR_PREFIX-.dev}
 # Overall static data directory.
