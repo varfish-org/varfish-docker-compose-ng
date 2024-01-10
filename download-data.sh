@@ -17,11 +17,11 @@ export DRY_RUN=${DRY_RUN-0}
 # Download options: reduced-dev (default), reduced-exomes, full.
 export DOWNLOAD=${DOWNLOAD-reduced-dev}
 # Directory for static data.
-export STATIC_DIR=${STATIC_DIR-varfish-static}
+export STATIC_INFIX=${STATIC_INFIX-varfish-static}
 # Overall directory prefix.
 export DIR_PREFIX=${DIR_PREFIX-.dev}
 # Overall static data directory.
-export DATA_DIR=${DATA_DIR-$DIR_PREFIX/volumes/$STATIC_DIR/data}
+export DATA_DIR=${DATA_DIR-$DIR_PREFIX/volumes/$STATIC_INFIX/data}
 # S3 endpoing URL.
 export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.bihealth.org
 
@@ -567,8 +567,8 @@ ln -sr $DATA_DIR/download/annonars/annonars-clinvar-sv-grch38-$V_ANNONARS_DATA_C
 
 log_info "- dotty"
 
-mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/download/dotty
-pushd $DIR_PREFIX/volumes/$STATIC_DIR/data/download/dotty >/dev/null
+mkdir -p $DATA_DIR/download/dotty
+pushd $DATA_DIR/download/dotty >/dev/null
 wget -q -c \
     https://github.com/SACGF/cdot/releases/download/v$V_DOTTY_CDOT_VERSION/cdot-$V_DOTTY_CDOT_VERSION.ensembl.grch37.json.gz \
     https://github.com/SACGF/cdot/releases/download/v$V_DOTTY_CDOT_VERSION/cdot-$V_DOTTY_CDOT_VERSION.ensembl.grch38.json.gz \
@@ -580,25 +580,25 @@ wget -q -c \
 cat seqrepo.tar.gz-?? | tar -xzf -
 popd >/dev/null
 
-mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/dotty
-rm -f $DIR_PREFIX/volumes/$STATIC_DIR/data/dotty/{*.json.gz,seqrepo}
-ln -sr $DIR_PREFIX/volumes/$STATIC_DIR/data/download/dotty/{*.json.gz,seqrepo} \
-  $DIR_PREFIX/volumes/$STATIC_DIR/data/dotty
+mkdir -p $DATA_DIR/dotty
+rm -f $DATA_DIR/dotty/{*.json.gz,seqrepo}
+ln -sr $DATA_DIR/download/dotty/{*.json.gz,seqrepo} \
+  $DATA_DIR/dotty
 
 log_info "- cada-prio"
 
-mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/download/cada
-pushd $DIR_PREFIX/volumes/$STATIC_DIR/data/download/cada >/dev/null
+mkdir -p $DATA_DIR/download/cada
+pushd $DATA_DIR/download/cada >/dev/null
 wget -q -c \
     https://github.com/bihealth/cada-prio-data/releases/download/cada-prio-data-$V_CADA_PRIO_MODEL/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
 tar -xzf cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
 popd >/dev/null
 
-mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/cada
-rm -f $DIR_PREFIX/volumes/$STATIC_DIR/data/cada/model
+mkdir -p $DATA_DIR/cada
+rm -f $DATA_DIR/cada/model
 
-source_dir="$DIR_PREFIX/volumes/$STATIC_DIR/data/download/cada/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION/model"
+source_dir="$DATA_DIR/download/cada/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION/model"
 for file in "${source_dir}"/*; do
-  rm -f "$DIR_PREFIX/volumes/$STATIC_DIR/data/cada/$(basename "$file")"
-  ln -sr "$file" "$DIR_PREFIX/volumes/$STATIC_DIR/data/cada/"
+  rm -f "$DATA_DIR/cada/$(basename "$file")"
+  ln -sr "$file" "$DATA_DIR/cada/"
 done
