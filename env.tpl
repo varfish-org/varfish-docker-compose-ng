@@ -54,6 +54,12 @@ GUNICORN_WORKERS=16
 # Name of the registry server and org to use for our images.
 # image_base=ghcr.io/bihealth
 
+# Version of the varfish image to use.
+# image_varfish_version=main
+
+# Name of the varfish-server image to use
+# image_varfish_name=varfish-server
+
 # Name of the mehari image to use.
 # image_mehari_name=mehari
 

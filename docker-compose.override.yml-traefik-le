@@ -45,5 +45,4 @@ services:
       - "traefik.http.services.varfish-web.loadbalancer.server.port=8080"
       - "traefik.http.routers.varfish-web.tls=true"
       # EXTRA labels lines for varfish-web to enable letsencrypt.
-      - "traefik.http.routers.varfish-web.tls=true"
       - "traefik.http.routers.varfish-web.tls.certresolver=le"
