@@ -47,7 +47,7 @@ Next, we setup some "secrets" for the passwords.
 
 ```bash session
 mkdir -p .prod/secrets
-echo db-password >.prod/secrets/db-password
+echo password >.prod/secrets/db-password
 echo minio-root-password >.prod/secrets/minio-root-password
 echo minio-varfish-password >.prod/secrets/minio-varfish-password
 ```
