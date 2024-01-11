@@ -27,6 +27,8 @@ x-service-varfish-server-default: &service_varfish_server_default
   <<: *service_default
   image: "${image_base-ghcr.io/bihealth}/\
     ${image_varfish_name:-varfish-server}:${image_varfish_version:-main}"
+  env_file:
+    .env
   networks:
     - varfish
   restart: unless-stopped

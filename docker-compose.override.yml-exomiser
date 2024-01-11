@@ -1,4 +1,27 @@
+# Docker Compose Override YAML fragment that provides a Exomiser REST
+# Prioritiser.
+#
+# Quick Manual:
+#
+# - merge with docker-compose.override.yml
+# - place configuration (from utils/exomiser) in the right plase
+# - place data in the right place
+
+# == Re-useable Definitions ==================================================
+
+# Default service definition for all (incl. postgres/redis/...)
+x-service-default: &service_default
+  networks:
+    - varfish
+  restart: unless-stopped
+
+# == Overide Definitions =====================================================
+
 services:
+  # -- Exomiser --------------------------------------------------------------
+  #
+  # We use the Exomiser REST Prioritizer for phenotype-based prioritization
+
   exomiser-rest-prioritiser:
     <<: *service_default
     image: "${image_exomiser__name-quay.io/biocontainers/exomiser-rest-prioritiser}:\
