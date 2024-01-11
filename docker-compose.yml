@@ -126,6 +126,11 @@ services:
     hostname: varfish-celeryd-query
     command: ["celeryd"]
     environment: ["CELERY_QUEUES=query", "CELERY_WORKERS=16"]
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/varfish-static/data
+        target: /data/varfish-static/data
+        read_only: true
 
   varfish-celeryd-export:
     <<: *service_varfish_server_default
@@ -153,6 +158,7 @@ services:
   # We serve static files such as browser tracks with nginx.
 
   nginx:
+    <<: *service_default
     container_name: nginx
     hostname: nginx
     image: ${image_nginx_name:-nginx}:${image_nginx_version:-1}
