@@ -129,6 +129,12 @@ GUNICORN_WORKERS=16
 # Version of the nginx image to use.
 # image_nginx_version=1
 
+# Name of the exomiser-rest-prioritiser image to use.
+# image_exomiser__name=quay.io/biocontainers/exomiser-rest-prioritiser
+
+# Version of the exomiser-rest-prioritiser image to use.
+# image_exomiser__version=13.3.0--hdfd78af_0
+
 # -- General Container Configuration -----------------------------------------
 
 # Base directory for configuration.
