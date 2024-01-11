@@ -28,6 +28,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Prepare empty .env file
+        run: |
+          touch .env
+
       - name: Prepare empty volumes
         run: |
           mkdir -p .ci/volumes/postgres/data

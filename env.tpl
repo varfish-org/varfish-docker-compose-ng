@@ -20,7 +20,7 @@ CELERY_BROKER_URL=redis://redis:6379/0
 VARFISH_ENABLE_JANNOVAR=1
 VARFISH_JANNOVAR_REST_API_URL=http://jannovar:80/
 
-VARFISH_ENABLE_EXOMISER_PRIORITISER=1
+VARFISH_ENABLE_EXOMISER_PRIORITISER=0
 VARFISH_ENABLE_EXTRA_ANNOS=1
 VARFISH_EXOMISER_PRIORITISER_API_URL=http://exomiser-rest-prioritiser:80/exomiser/api/prioritise/
 
@@ -128,6 +128,12 @@ GUNICORN_WORKERS=16
 
 # Version of the nginx image to use.
 # image_nginx_version=1
+
+# Name of the exomiser-rest-prioritiser image to use.
+# image_exomiser__name=quay.io/biocontainers/exomiser-rest-prioritiser
+
+# Version of the exomiser-rest-prioritiser image to use.
+# image_exomiser__version=13.3.0--hdfd78af_0
 
 # -- General Container Configuration -----------------------------------------
 
