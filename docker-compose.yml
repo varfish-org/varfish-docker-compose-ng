@@ -32,6 +32,10 @@ x-service-varfish-server-default: &service_varfish_server_default
   networks:
     - varfish
   restart: unless-stopped
+  secrets:
+    - db-url
+    - varfish-server-django-secret-key
+    - minio-varfish-password
   depends_on:  # start after all others
     - annonars
     - mehari
@@ -92,6 +96,8 @@ services:
 
   varfish-web:
     <<: *service_varfish_server_default
+    container_name: varfish-web
+    hostname: varfish-web
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
@@ -102,31 +108,43 @@ services:
 
   varfish-celerybeat:
     <<: *service_varfish_server_default
+    container_name: varfish-celerybeat
+    hostname: varfish-celerybeat
     command:
       - celerybeat
 
   varfish-celeryd-default:
     <<: *service_varfish_server_default
+    container_name: varfish-celeryd-default
+    hostname: varfish-celeryd-default
     command: ["celeryd"]
     environment: ["CELERY_QUEUES=default", "CELERY_WORKERS=16"]
 
   varfish-celeryd-query:
     <<: *service_varfish_server_default
+    container_name: varfish-celeryd-query
+    hostname: varfish-celeryd-query
     command: ["celeryd"]
     environment: ["CELERY_QUEUES=query", "CELERY_WORKERS=16"]
 
   varfish-celeryd-export:
     <<: *service_varfish_server_default
+    container_name: varfish-celeryd-export
+    hostname: varfish-celeryd-export
     command: ["celeryd"]
     environment: ["CELERY_QUEUES=export", "CELERY_WORKERS=16"]
 
   varfish-celeryd-import:
     <<: *service_varfish_server_default
+    container_name: varfish-celeryd-import
+    hostname: varfish-celeryd-import
     command: ["celeryd"]
     environment: ["CELERY_QUEUES=import", "CELERY_WORKERS=4"]
 
   varfish-celeryd-maintenance:
     <<: *service_varfish_server_default
+    container_name: varfish-celeryd-maintenance
+    hostname: varfish-celeryd-maintenance
     command: ["celeryd"]
     environment: ["CELERY_QUEUES=maintenance", "CELERY_WORKERS=4"]
 
@@ -289,6 +307,12 @@ secrets:
   # The PostgreSQL database password.
   db-password:
     file: ${secrets_basedir:-./.dev/secrets}/db-password
+  # The Django database URL.
+  db-url:
+    file: ${secrets_basedir:-./.dev/secrets}/db-url
+  # The Django secret key.
+  varfish-server-django-secret-key:
+    file: ${secrets_basedir:-./.dev/secrets}/varfish-server-django-secret-key
   # The secrets for the root (=minioadmin) user on the MinIO server.
   minio-root-password:
     file: ${secrets_basedir:-./.dev/secrets}/minio-root-password

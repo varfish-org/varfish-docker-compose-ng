@@ -31,7 +31,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       # EXTRA volumes lines to mount the (to-be-created) configuration
       # directory
-      - "./volumes/traefik/letsencrypt:/letsencrypt:rw"
+      - ".prod/volumes/traefik/letsencrypt:/letsencrypt:rw"
 
   # Configuration to override for `varfish-web`.
   varfish-web:

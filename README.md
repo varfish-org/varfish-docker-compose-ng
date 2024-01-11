@@ -48,6 +48,7 @@ Next, we setup some "secrets" for the passwords.
 ```bash session
 mkdir -p .prod/secrets
 echo password >.prod/secrets/db-password
+echo postgresql://varfish:password@postgres/varfish >.prod/secrets/db-url
 echo minio-root-password >.prod/secrets/minio-root-password
 echo minio-varfish-password >.prod/secrets/minio-varfish-password
 ```
@@ -58,7 +59,7 @@ Also, setup a secret for the web server sessions:
 # ensure that pwgen is installed first
 pwgen
 # generate a 100 character secret
-pwgen 100 1 >.prod/secrets/varfish-server-django-secret-file
+pwgen 100 1 >.prod/secrets/varfish-server-django-secret-key
 ```
 
 We now copy the `env.tpl` file to the default location for the environment `.env`.

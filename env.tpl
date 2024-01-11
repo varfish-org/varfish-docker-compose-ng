@@ -3,13 +3,13 @@
 # Postgres configuration ----------------------------------------------------
 
 POSTGRES_USER=varfish
-POSTGRES_PASSWORD=password
+POSTGRES_PASSWORD_FILE=/run/secrets/db-password
 POSTGRES_DB=varfish
 POSTGRES_HOST=postgres
 
 # VarFish configuration -----------------------------------------------------
 
-DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}"
+DATABASE_URL_FILE="/run/secrets/db-url"
 
 DJANGO_ALLOWED_HOSTS="*"
 DJANGO_SECRET_KEY_FILE=/run/secrets/varfish-server-django-secret-key
@@ -36,6 +36,11 @@ VARFISH_ENABLE_BEACON_SITE=1
 
 # JS and CSS downloaded from CDN.
 PROJECTROLES_DISABLE_CDN_INCLUDES=1
+
+# Backend URL configuration (TODO: should become the default)
+VARFISH_BACKEND_URL_NGINX=http://nginx:80
+VARFISH_BACKEND_URL_ANNONARS=http://annonars:8080
+VARFISH_BACKEND_URL_MEHARI=http://mehari:8080
 
 # Extra: CADD REST API *****************************************************
 
