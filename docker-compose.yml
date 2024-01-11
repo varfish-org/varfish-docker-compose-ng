@@ -10,16 +10,46 @@ x-service-default: &service_default
     - varfish
   restart: unless-stopped
 
-# Default service definition for varfish services.
+# Default service definition for services with access to static data.
 #
 # We provide the /data directory as read-only to all services as this
 # simplifies the configuration considerably.
-x-service-varfish-default: &service_varfish_default
+x-service-varfish-static-data-default: &service_static_data_default
+  <<: *service_default
   volumes:
     - type: bind
       source: ${volumes_basedir:-./.dev/volumes}/varfish-static/data
       target: /data
       read_only: true
+
+# Default service definition for services with the `varfish-server` image.
+x-service-varfish-server-default: &service_varfish_server_default
+  <<: *service_default
+  image: "${image_base-ghcr.io/bihealth}/\
+    ${image_varfish_name:-varfish-server}:${image_varfish_version:-main}"
+  networks:
+    - varfish
+  restart: unless-stopped
+  secrets:
+    - db-url
+    - varfish-server-django-secret-key
+    - minio-varfish-password
+  depends_on:  # start after all others
+    - annonars
+    - mehari
+    - minio
+    - postgres
+    - redis
+    - traefik
+    - viguno
+
+# Default service definition for VarFish celery services.
+x-service-varfish-celery-default: &service_varfish_celery_default
+  <<: *service_varfish_server_default
+  depends_on:
+    - postgres
+    - redis
+    - varfish-web
 
 
 # == Services ================================================================
@@ -58,11 +88,75 @@ services:
       # Mount Docker socket into container so traefik can react to events.
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
+  # -- VarFish ---------------------------------------------------------------
+  #
+  # VarFish-related services.
+
+  varfish-web:
+    <<: *service_varfish_server_default
+    container_name: varfish-web
+    hostname: varfish-web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.varfish-web.entrypoints=web,websecure"
+      - "traefik.http.routers.varfish-web.middlewares=xforward"
+      - "traefik.http.routers.varfish-web.rule=HostRegexp(`{catchall:.+}`)"
+      - "traefik.http.services.varfish-web.loadbalancer.server.port=8080"
+
+  varfish-celerybeat:
+    <<: *service_varfish_server_default
+    container_name: varfish-celerybeat
+    hostname: varfish-celerybeat
+    command:
+      - celerybeat
+
+  varfish-celeryd-default:
+    <<: *service_varfish_server_default
+    container_name: varfish-celeryd-default
+    hostname: varfish-celeryd-default
+    command: ["celeryd"]
+    environment: ["CELERY_QUEUES=default", "CELERY_WORKERS=16"]
+
+  varfish-celeryd-query:
+    <<: *service_varfish_server_default
+    container_name: varfish-celeryd-query
+    hostname: varfish-celeryd-query
+    command: ["celeryd"]
+    environment: ["CELERY_QUEUES=query", "CELERY_WORKERS=16"]
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/varfish-static/data
+        target: /data/varfish-static/data
+        read_only: true
+
+  varfish-celeryd-export:
+    <<: *service_varfish_server_default
+    container_name: varfish-celeryd-export
+    hostname: varfish-celeryd-export
+    command: ["celeryd"]
+    environment: ["CELERY_QUEUES=export", "CELERY_WORKERS=16"]
+
+  varfish-celeryd-import:
+    <<: *service_varfish_server_default
+    container_name: varfish-celeryd-import
+    hostname: varfish-celeryd-import
+    command: ["celeryd"]
+    environment: ["CELERY_QUEUES=import", "CELERY_WORKERS=4"]
+
+  varfish-celeryd-maintenance:
+    <<: *service_varfish_server_default
+    container_name: varfish-celeryd-maintenance
+    hostname: varfish-celeryd-maintenance
+    command: ["celeryd"]
+    environment: ["CELERY_QUEUES=maintenance", "CELERY_WORKERS=4"]
+
   # -- nginx -----------------------------------------------------------------
   #
   # We serve static files such as browser tracks with nginx.
 
   nginx:
+    <<: *service_default
     container_name: nginx
     hostname: nginx
     image: ${image_nginx_name:-nginx}:${image_nginx_version:-1}
@@ -80,7 +174,7 @@ services:
   # Mehari provides the transcript-related information.
 
   mehari:
-    <<: *service_varfish_default
+    <<: *service_static_data_default
     container_name: mehari
     hostname: mehari
     image: "${image_base:-ghcr.io/bihealth}/${image_mehari_name:-mehari}:\
@@ -92,7 +186,7 @@ services:
   # information..
 
   viguno:
-    <<: *service_varfish_default
+    <<: *service_static_data_default
     container_name: viguno
     hostname: viguno
     image: "${image_base:-ghcr.io/bihealth}/${image_viguno_name:-viguno}:\
@@ -103,7 +197,7 @@ services:
   # Annonars provides the variant information but also the gene information.
 
   annonars:
-    <<: *service_varfish_default
+    <<: *service_static_data_default
     container_name: annonars
     hostname: annonars
     image: "${image_base:-ghcr.io/bihealth}/${image_annonars_name:-annonars}:\
@@ -217,6 +311,12 @@ secrets:
   # The PostgreSQL database password.
   db-password:
     file: ${secrets_basedir:-./.dev/secrets}/db-password
+  # The Django database URL.
+  db-url:
+    file: ${secrets_basedir:-./.dev/secrets}/db-url
+  # The Django secret key.
+  varfish-server-django-secret-key:
+    file: ${secrets_basedir:-./.dev/secrets}/varfish-server-django-secret-key
   # The secrets for the root (=minioadmin) user on the MinIO server.
   minio-root-password:
     file: ${secrets_basedir:-./.dev/secrets}/minio-root-password

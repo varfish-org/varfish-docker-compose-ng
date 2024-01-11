@@ -31,7 +31,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       # EXTRA volumes lines to mount the (to-be-created) configuration
       # directory
-      - "./volumes/traefik/letsencrypt:/letsencrypt:rw"
+      - ".prod/volumes/traefik/letsencrypt:/letsencrypt:rw"
 
   # Configuration to override for `varfish-web`.
   varfish-web:
@@ -45,5 +45,4 @@ services:
       - "traefik.http.services.varfish-web.loadbalancer.server.port=8080"
       - "traefik.http.routers.varfish-web.tls=true"
       # EXTRA labels lines for varfish-web to enable letsencrypt.
-      - "traefik.http.routers.varfish-web.tls=true"
       - "traefik.http.routers.varfish-web.tls.certresolver=le"

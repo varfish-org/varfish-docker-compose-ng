@@ -1,8 +1,7 @@
-## Demo
+## Location for data
 /.dev
-
-## CI
 /.ci
+/.prod
 
 ## Docker Compose
 # Configuration file.
