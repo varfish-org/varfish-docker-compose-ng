@@ -105,6 +105,7 @@ services:
       - "traefik.http.routers.varfish-web.middlewares=xforward"
       - "traefik.http.routers.varfish-web.rule=HostRegexp(`{catchall:.+}`)"
       - "traefik.http.services.varfish-web.loadbalancer.server.port=8080"
+      - "traefik.http.routers.varfish-web.tls=true"
 
   varfish-celerybeat:
     <<: *service_varfish_server_default

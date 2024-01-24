@@ -1,0 +1,56 @@
+# Docker Compose Override YAML fragment that provides a CADD REST API
+# # Server
+#
+# Quick Manual:
+#
+# - merge with docker-compose.override.yml
+# - place data in the right place
+
+# == Re-useable Definitions ==================================================
+
+# Default service definition for all (incl. postgres/redis/...)
+x-service-default: &service_default
+  networks:
+    - varfish
+  restart: unless-stopped
+
+# == Overide Definitions =====================================================
+
+services:
+  # -- CADD REST API ---------------------------------------------------------
+  # 
+  # REST API server for CADD sequence variant annotation.
+
+  cadd-rest-api-server:
+    <<: *service_default
+    image: "${image_cadd_name-bihealth/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
+    env_file: cadd-rest-api.env
+    command:
+      - wsgi
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/db
+        target: /data/db
+        read_only: false
+
+  cadd-rest-api-worker:
+    <<: *service_default
+    deploy:
+      replicas: 5
+    image: "${image_cadd_name-bihealth/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
+    env_file: cadd-rest-api.env
+    command:
+      - celeryd
+    volumes:
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/data/annotations
+        target: /opt/miniconda3/share/cadd-scripts-1.6-0/data/annotations
+        read_only: true
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/data/prescored
+        target: /opt/miniconda3/share/cadd-scripts-1.6-0/data/prescored
+        read_only: true
+      - type: bind
+        source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/db
+        target: /data/db
+        read_only: false

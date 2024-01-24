@@ -242,7 +242,7 @@ EOF
 mkdir -p $DATA_DIR/download
 # Download each entry from download list.  Note that we support commenting
 # out lines with a leading "#".
-grep -v ^# /tmp/download-list.txt >/tmp/download-list.nocomment.txt
+grep -v ^# /tmp/download-list.txt | grep -v grch37 >/tmp/download-list.nocomment.txt
 while read -r line; do
     # Create the download directory.
     run mkdir -p $DATA_DIR/download/$line
@@ -251,6 +251,7 @@ while read -r line; do
     run s5cmd \
         --endpoint-url=$S3_ENDPOINT_URL \
         --no-sign-request \
+	--no-verify-ssl \
         sync \
         "s3://varfish-public/$(prefix_for $line)/$line/*" \
         $DATA_DIR/download/$line \

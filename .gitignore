@@ -6,6 +6,7 @@
 ## Docker Compose
 # Configuration file.
 .env
+/*.env
 .secrets/
 
 # The Docker Compose "override" YAML file.
