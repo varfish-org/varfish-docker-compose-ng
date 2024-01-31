@@ -203,8 +203,8 @@ services:
     <<: *service_static_data_default
     container_name: annonars
     hostname: annonars
-    image: "${image_base:-ghcr.io/varfish-org}/${image_annonars_name:-annonars}:\
-      ${image_annonars_version:-latest}"
+    image: "${image_base:-ghcr.io/varfish-org}/\
+      ${image_annonars_name:-annonars}:${image_annonars_version:-latest}"
 
   # -- PostgreSQL Server -----------------------------------------------------
   #
