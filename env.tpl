@@ -61,7 +61,7 @@ GUNICORN_WORKERS=16
 # -- Docker Images -----------------------------------------------------------
 
 # Name of the registry server and org to use for our images.
-# image_base=ghcr.io/bihealth
+# image_base=ghcr.io/varfish-org
 
 # Version of the varfish image to use.
 # image_varfish_version=main

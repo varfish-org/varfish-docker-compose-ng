@@ -25,7 +25,7 @@ x-service-varfish-static-data-default: &service_static_data_default
 # Default service definition for services with the `varfish-server` image.
 x-service-varfish-server-default: &service_varfish_server_default
   <<: *service_default
-  image: "${image_base-ghcr.io/bihealth}/\
+  image: "${image_base-ghcr.io/varfish-org}/\
     ${image_varfish_name:-varfish-server}:${image_varfish_version:-main}"
   env_file:
     .env
@@ -180,7 +180,7 @@ services:
     <<: *service_static_data_default
     container_name: mehari
     hostname: mehari
-    image: "${image_base:-ghcr.io/bihealth}/${image_mehari_name:-mehari}:\
+    image: "${image_base:-ghcr.io/varfish-org}/${image_mehari_name:-mehari}:\
       ${image_mehari_version:-latest}"
 
   # -- Viguno ----------------------------------------------------------------
@@ -192,7 +192,7 @@ services:
     <<: *service_static_data_default
     container_name: viguno
     hostname: viguno
-    image: "${image_base:-ghcr.io/bihealth}/${image_viguno_name:-viguno}:\
+    image: "${image_base:-ghcr.io/varfish-org}/${image_viguno_name:-viguno}:\
       ${image_viguno_version:-latest}"
 
   # -- Annonars ---------------------------------------------------------------
@@ -203,7 +203,7 @@ services:
     <<: *service_static_data_default
     container_name: annonars
     hostname: annonars
-    image: "${image_base:-ghcr.io/bihealth}/${image_annonars_name:-annonars}:\
+    image: "${image_base:-ghcr.io/varfish-org}/${image_annonars_name:-annonars}:\
       ${image_annonars_version:-latest}"
 
   # -- PostgreSQL Server -----------------------------------------------------

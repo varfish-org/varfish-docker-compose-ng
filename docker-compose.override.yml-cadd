@@ -23,7 +23,7 @@ services:
 
   cadd-rest-api-server:
     <<: *service_default
-    image: "${image_cadd_name-bihealth/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
+    image: "${image_cadd_name-varfish-org/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
     env_file: cadd-rest-api.env
     command:
       - wsgi
@@ -37,7 +37,7 @@ services:
     <<: *service_default
     deploy:
       replicas: 5
-    image: "${image_cadd_name-bihealth/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
+    image: "${image_cadd_name-varfish-org/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
     env_file: cadd-rest-api.env
     command:
       - celeryd

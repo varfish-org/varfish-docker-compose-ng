@@ -1,6 +1,6 @@
 # VarFish Docker Compose Configuration
 
-This repository contains the [Docker Compose](https://docs.docker.com/compose/) configuration for the [VarFish Server](https://github.com/bihealth/varfish-server).
+This repository contains the [Docker Compose](https://docs.docker.com/compose/) configuration for the [VarFish Server](https://github.com/varfish-org/varfish-server).
 
 ## Development Setup
 
@@ -29,7 +29,7 @@ Instructions can be found [here on the Docker.com website](https://docs.docker.c
 First, clone the repository:
 
 ```bash session
-git clone git@github.com:bihealth/varfish-docker-compose-ng.git
+git clone git@github.com:varfish-org/varfish-docker-compose-ng.git
 ```
 
 From here on, the commands should be executed from within this repository (`cd varfish-docker-compose-ng`).
@@ -229,7 +229,7 @@ To User: the-user
 ### Managing GitHub Project with Terraform
 
 ```bash session
-$ export GITHUB_OWNER=bihealth
+$ export GITHUB_OWNER=varfish-org
 $ export GITHUB_TOKEN=ghp_<thetoken>
 
 $ cd utils/terraform
