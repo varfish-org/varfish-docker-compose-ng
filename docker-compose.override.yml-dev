@@ -55,3 +55,26 @@ services:
   redis:
     deploy:
       replicas: 0
+
+  # disable varfish containers
+  varfish-web:
+    deploy:
+      replicas: 0
+  varfish-celerybeat:
+    deploy:
+      replicas: 0
+  varfish-celeryd-default:
+    deploy:
+      replicas: 0
+  varfish-celeryd-query:
+    deploy:
+      replicas: 0
+  varfish-celeryd-import:
+    deploy:
+      replicas: 0
+  varfish-celeryd-export:
+    deploy:
+      replicas: 0
+  varfish-celeryd-maintenance:
+    deploy:
+      replicas: 0
