@@ -23,7 +23,7 @@ export DIR_PREFIX=${DIR_PREFIX-.dev}
 # Overall static data directory.
 export DATA_DIR=${DATA_DIR-$DIR_PREFIX/volumes/$STATIC_INFIX/data}
 # S3 endpoing URL.
-export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.bihealth.org
+export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.varfish-org.org
 
 # -- Versions -----------------------------------------------------------------
 
@@ -514,7 +514,7 @@ mkdir -p $DATA_DIR/download/mehari-data-txs-grch3{7,8}
 for ext in .zst .zst.sha256 .zst.report .zst.report.sha256; do
   for release in grch37 grch38; do
     wget -q -c -O $DATA_DIR/download/mehari-data-txs-$release/mehari-data-txs-$release-$V_MEHARI_TXS.bin$ext \
-      https://github.com/bihealth/mehari-data-tx/releases/download/v$V_MEHARI_TXS/mehari-data-txs-$release-$V_MEHARI_TXS.bin$ext
+      https://github.com/varfish-org/mehari-data-tx/releases/download/v$V_MEHARI_TXS/mehari-data-txs-$release-$V_MEHARI_TXS.bin$ext
   done
 done
 
@@ -527,9 +527,9 @@ done
 log_info "- clinvar"
 
 wget -q -c -O /tmp/annonars-clinvar-minimal-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-minimal-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
+  https://github.com/varfish-org/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-minimal-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 wget -q -c -O /tmp/annonars-clinvar-minimal-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-minimal-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
+  https://github.com/varfish-org/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-minimal-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 
 tar -C $DATA_DIR/download/annonars/ \
   -xf /tmp/annonars-clinvar-minimal-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
@@ -544,7 +544,7 @@ ln -sr $DATA_DIR/download/annonars/annonars-clinvar-minimal-grch38-$V_ANNONARS_D
   $DATA_DIR/annonars/grch38/clinvar
 
 wget -q -c -O /tmp/annonars-clinvar-genes-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-genes-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
+  https://github.com/varfish-org/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-genes-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 tar -C $DATA_DIR/download/annonars \
   -xf /tmp/annonars-clinvar-genes-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 
@@ -553,9 +553,9 @@ ln -sr $DATA_DIR/download/annonars/annonars-clinvar-genes-$V_ANNONARS_DATA_CLINV
   $DATA_DIR/annonars/clinvar-genes
 
 wget -q -c -O /tmp/annonars-clinvar-sv-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-sv-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
+  https://github.com/varfish-org/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-sv-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 wget -q -c -O /tmp/annonars-clinvar-sv-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz \
-  https://github.com/bihealth/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-sv-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
+  https://github.com/varfish-org/annonars-data-clinvar/releases/download/annonars-data-clinvar-$V_ANNONARS_DATA_CLINVAR_CLINVAR/annonars-clinvar-sv-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 tar -C $DATA_DIR/download/annonars/ \
   -xf /tmp/annonars-clinvar-sv-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz
 tar -C $DATA_DIR/download/annonars/ \
@@ -576,8 +576,8 @@ wget -q -c \
     https://github.com/SACGF/cdot/releases/download/v$V_DOTTY_CDOT_VERSION/cdot-$V_DOTTY_CDOT_VERSION.refseq.grch37.json.gz \
     https://github.com/SACGF/cdot/releases/download/v$V_DOTTY_CDOT_VERSION/cdot-$V_DOTTY_CDOT_VERSION.refseq.grch38.json.gz
 wget -q -c \
-  https://github.com/bihealth/dotty/releases/download/v$V_DOTTY_SEQREPO/seqrepo.tar.gz-00 \
-  https://github.com/bihealth/dotty/releases/download/v$V_DOTTY_SEQREPO/seqrepo.tar.gz-01
+  https://github.com/varfish-org/dotty/releases/download/v$V_DOTTY_SEQREPO/seqrepo.tar.gz-00 \
+  https://github.com/varfish-org/dotty/releases/download/v$V_DOTTY_SEQREPO/seqrepo.tar.gz-01
 cat seqrepo.tar.gz-?? | tar -xzf -
 popd >/dev/null
 
@@ -591,7 +591,7 @@ log_info "- cada-prio"
 mkdir -p $DATA_DIR/download/cada
 pushd $DATA_DIR/download/cada >/dev/null
 wget -q -c \
-    https://github.com/bihealth/cada-prio-data/releases/download/cada-prio-data-$V_CADA_PRIO_MODEL/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
+    https://github.com/varfish-org/cada-prio-data/releases/download/cada-prio-data-$V_CADA_PRIO_MODEL/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
 tar -xzf cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
 popd >/dev/null
 
