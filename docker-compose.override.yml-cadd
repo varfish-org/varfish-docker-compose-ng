@@ -44,11 +44,11 @@ services:
     volumes:
       - type: bind
         source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/data/annotations
-        target: /opt/miniconda3/share/cadd-scripts-1.6-0/data/annotations
+        target: /opt/miniconda3/share/cadd-scripts-1.6.post1-0/data/annotations
         read_only: true
       - type: bind
         source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/data/prescored
-        target: /opt/miniconda3/share/cadd-scripts-1.6-0/data/prescored
+        target: /opt/miniconda3/share/cadd-scripts-1.6.post1-0/data/prescored
         read_only: true
       - type: bind
         source: ${volumes_basedir:-./.dev/volumes}/cadd-rest-api/db
