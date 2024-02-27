@@ -42,10 +42,6 @@ VARFISH_BACKEND_URL_NGINX=http://nginx:80
 VARFISH_BACKEND_URL_ANNONARS=http://annonars:8080
 VARFISH_BACKEND_URL_MEHARI=http://mehari:8080
 
-# TODO: should not be necessary in the future
-VARFISH_WORKER_DB_PATH=/data/varfish-static/data/worker-data-0.10.2
-VARFISH_WORKER_EXE_PATH=/opt/miniconda3/envs/varfish-server/bin/varfish-server-worker
-
 # Extra: CADD REST API *****************************************************
 
 # Use the following lines to enable variant prioritization using the
