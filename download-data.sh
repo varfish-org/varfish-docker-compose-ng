@@ -23,7 +23,7 @@ export DIR_PREFIX=${DIR_PREFIX-.dev}
 # Overall static data directory.
 export DATA_DIR=${DATA_DIR-$DIR_PREFIX/volumes/$STATIC_INFIX/data}
 # S3 endpoing URL.
-export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.varfish-org.org
+export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.bihealth.org
 
 # -- Versions -----------------------------------------------------------------
 
@@ -242,7 +242,7 @@ EOF
 mkdir -p $DATA_DIR/download
 # Download each entry from download list.  Note that we support commenting
 # out lines with a leading "#".
-grep -v ^# /tmp/download-list.txt | grep -v grch37 >/tmp/download-list.nocomment.txt
+grep -v ^# /tmp/download-list.txt >/tmp/download-list.nocomment.txt
 while read -r line; do
     # Create the download directory.
     run mkdir -p $DATA_DIR/download/$line
@@ -251,7 +251,7 @@ while read -r line; do
     run s5cmd \
         --endpoint-url=$S3_ENDPOINT_URL \
         --no-sign-request \
-	--no-verify-ssl \
+        --no-verify-ssl \
         sync \
         "s3://varfish-public/$(prefix_for $line)/$line/*" \
         $DATA_DIR/download/$line \
@@ -403,12 +403,6 @@ mkdir -p $DATA_DIR/worker/grch3{7,8}/strucvars/bgdbs
 
 log_info "  - strucvars/bgdbs"
 rm -f $DATA_DIR/worker/grch3{7,8}/strucvars/bgdbs/{exac,g1k,gnomad,dbvar,dgv,dgv-gs}.bin
-ln -sr $(echo $DATA_DIR/download/worker/bgdb-exac-grch37-*/bgdb-exac.bin | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch37/strucvars/bgdbs/exac.bin
-ln -sr $(echo $DATA_DIR/download/worker/bgdb-g1k-grch37-$V_G1K+$V_WORKER/bgdb-g1k.bin | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch37/strucvars/bgdbs/g1k.bin
-ln -sr $(echo $DATA_DIR/download/worker/bgdb-gnomad-grch37-*/bgdb-gnomad.bin | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch37/strucvars/bgdbs/gnomad.bin
 ln -sr $(echo $DATA_DIR/download/worker/bgdb-dbvar-grch37-*/bgdb-dbvar.bin | tr ' ' '\n' | tail -n 1) \
   $DATA_DIR/worker/grch37/strucvars/bgdbs/dbvar.bin
 ln -sr $(echo $DATA_DIR/download/worker/bgdb-dbvar-grch38-*/bgdb-dbvar.bin | tr ' ' '\n' | tail -n 1) \
@@ -418,9 +412,20 @@ ln -sr $(echo $DATA_DIR/download/worker/bgdb-dgv-grch37-*/bgdb-dgv.bin | tr ' ' 
 ln -sr $(echo $DATA_DIR/download/worker/bgdb-dgv-grch38-*/bgdb-dgv.bin | tr ' ' '\n' | tail -n 1) \
   $DATA_DIR/worker/grch38/strucvars/bgdbs/dgv.bin
 ln -sr $(echo $DATA_DIR/download/worker/bgdb-dgv-gs-grch37-*/bgdb-dgv-gs.bin | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch37/strucvars/bgdbs/dgv-gs.bin
+  $DATA_DIR/worker/grch37/strucvars/bgdbs/dgv_gs.bin
 ln -sr $(echo $DATA_DIR/download/worker/bgdb-dgv-gs-grch38-*/bgdb-dgv-gs.bin | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch38/strucvars/bgdbs/dgv-gs.bin
+  $DATA_DIR/worker/grch38/strucvars/bgdbs/dgv_gs.bin
+ln -sr $(echo $DATA_DIR/download/worker/bgdb-g1k-grch37-$V_G1K+$V_WORKER/bgdb-g1k.bin | tr ' ' '\n' | tail -n 1) \
+  $DATA_DIR/worker/grch37/strucvars/bgdbs/g1k.bin
+# NB: no thousand genomes for GRCh38
+ln -sr $(echo $DATA_DIR/download/worker/bgdb-exac-grch37-*/bgdb-exac.bin | tr ' ' '\n' | tail -n 1) \
+  $DATA_DIR/worker/grch37/strucvars/bgdbs/gnomad_exomes.bin
+ln -sr $(echo $DATA_DIR/download/worker/bgdb-gnomad-exomes-cnv-grch38-*/bgdb-gnomad-exomes-cnv-grch38.bin | tr ' ' '\n' | tail -n 1) \
+  $DATA_DIR/worker/grch38/strucvars/bgdbs/gnomad_exomes.bin
+ln -sr $(echo $DATA_DIR/download/worker/bgdb-gnomad-grch37-*/bgdb-gnomad.bin | tr ' ' '\n' | tail -n 1) \
+  $DATA_DIR/worker/grch37/strucvars/bgdbs/gnomad_genomes.bin
+ln -sr $(echo $DATA_DIR/download/worker/bgdb-gnomad-genomes-sv-grch38-*/bgdb-gnomad-genomes-sv-grch38.bin | tr ' ' '\n' | tail -n 1) \
+  $DATA_DIR/worker/grch38/strucvars/bgdbs/gnomad_genomes.bin
 
 log_info "  - strucvars/clinvar"
 rm -f $DATA_DIR/worker/grch3{7,8}/strucvars/clinvar.bin
@@ -430,13 +435,13 @@ ln -sr $(ls $DATA_DIR/download/worker/clinvar-strucvars-grch37-*/clinvar-strucva
 ln -sr $(ls $DATA_DIR/download/worker/clinvar-strucvars-grch38-*/clinvar-strucvars.bin | tr ' ' '\n' | tail -n 1) \
   $DATA_DIR/worker/grch38/strucvars/clinvar.bin
 
-log_info "  - strucvars/patho-mms"
-rm -f $DATA_DIR/worker/grch3?/strucvars/patho-mms.bed
+log_info "  - strucvars/patho_mms"
+rm -f $DATA_DIR/worker/grch3?/strucvars/patho_mms.bed
 
 ln -sr $(ls $DATA_DIR/download/worker/patho-mms-grch37-*/patho-mms.bed | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch37/strucvars/patho-mms.bed
+  $DATA_DIR/worker/grch37/strucvars/patho_mms.bed
 ln -sr $(ls $DATA_DIR/download/worker/patho-mms-grch38-*/patho-mms.bed | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/grch38/strucvars/patho-mms.bed
+  $DATA_DIR/worker/grch38/strucvars/patho_mms.bed
 
 log_info "  - strucvars/tads"
 mkdir -p $DATA_DIR/worker/grch3{7,8}/tads
@@ -449,14 +454,14 @@ ln -sr $(ls $DATA_DIR/download/worker/tads-grch38-dixon2015/hesc.bed | tr ' ' '\
 
 log_info "  - noref/genes"
 mkdir -p $DATA_DIR/worker/noref/genes
-rm -f $DATA_DIR/worker/noref/genes/{xlink.bin,acmg.tsv,mime2gene.tsv}
+rm -f $DATA_DIR/worker/noref/genes/{xlink.bin,acmg.tsv,mim2gene.tsv}
 
 ln -sr $(ls $DATA_DIR/download/worker/genes-xlink-*/genes-xlink.bin | tr ' ' '\n' | tail -n 1) \
   $DATA_DIR/worker/noref/genes/xlink.bin
 ln -sr $(ls $DATA_DIR/download/worker/acmg-sf-*/acmg_sf.tsv | tr ' ' '\n' | tail -n 1) \
   $DATA_DIR/worker/noref/genes/acmg.tsv
 ln -sr $(ls $DATA_DIR/download/worker/mim2gene-*/mim2gene.tsv | tr ' ' '\n' | tail -n 1) \
-  $DATA_DIR/worker/noref/genes/mime2gene.tsv
+  $DATA_DIR/worker/noref/genes/mim2gene.tsv
 
 log_info "  - grch3{7,8}/regions"
 mkdir -p $DATA_DIR/worker/grch3{7,8}/genes
