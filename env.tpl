@@ -41,6 +41,7 @@ PROJECTROLES_DISABLE_CDN_INCLUDES=1
 VARFISH_BACKEND_URL_NGINX=http://nginx:80
 VARFISH_BACKEND_URL_ANNONARS=http://annonars:8080
 VARFISH_BACKEND_URL_MEHARI=http://mehari:8080
+VARFISH_BACKEND_URL_VIGUNO=http://viguno:8080
 
 # Extra: CADD REST API *****************************************************
 
