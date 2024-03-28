@@ -23,7 +23,7 @@ export STATIC_INFIX=${STATIC_INFIX-varfish-static}
 # Overall directory prefix.
 export DIR_PREFIX=${DIR_PREFIX-.dev}
 # Overall static data directory.
-export DATA_DIR=${DATA_DIR-$DIR_PREFIX/volumes/$STATIC_DIR/data}
+export DATA_DIR=${DATA_DIR-$DIR_PREFIX/volumes/$STATIC_INFIX/data}
 # S3 endpoing URL.
 export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.bihealth.org
 # Grep regex expression for downloading data.
@@ -43,7 +43,7 @@ fi
 # annonars
 export V_ANNONARS=${V_ANNONARS-0.33.0}
 # annonars for annonars/genes
-export V_ANNONARS_ANNONARS_GENES=${V_ANNONARS_ANNONARS_GENES-0.34.0}
+export V_ANNONARS_GENES=${V_ANNONARS_GENES-0.34.0}
 # viguno
 export V_VIGUNO=${V_VIGUNO-0.2.0}
 # VarFish Worker
@@ -234,7 +234,7 @@ annonars/dbsnp-grch37-$V_DBSNP+$V_ANNONARS
 annonars/dbsnp-grch38-$V_DBSNP+$V_ANNONARS
 annonars/functional-grch37-$V_REFSEQ_GRCH37+$V_ANNONARS
 annonars/functional-grch38-$V_REFSEQ_GRCH38+$V_ANNONARS
-annonars/genes-$V_ACMG_SF+$V_GNOMAD_CONSTRAINTS+$V_DBNSFP_NO_SUFFIX+$V_HPO_ANNONARS_GENES+$V_VARFISHDB_ANNONARS_GENES+$V_ANNONARS_ANNONARS_GENES
+annonars/genes-$V_ACMG_SF+$V_GNOMAD_CONSTRAINTS+$V_DBNSFP_NO_SUFFIX+$V_HPO+$V_ORPHAPACKETS+$V_VARFISHDB+$V_ANNONARS
 annonars/gnomad-exomes-grch37-$V_GNOMAD_EXOMES_GRCH37+$V_ANNONARS
 annonars/gnomad-exomes-grch38-$V_GNOMAD_EXOMES_GRCH38+$V_ANNONARS
 annonars/gnomad-genomes-grch37-$V_GNOMAD_EXOMES_GRCH37+$V_ANNONARS
@@ -293,7 +293,7 @@ EOF
 
     rm -f $DATA_DIR/annonars/genes
     ln -sr \
-        $DATA_DIR/download/annonars/genes-$V_ACMG_SF+$V_GNOMAD_CONSTRAINTS+$V_DBNSFP_NO_SUFFIX+$V_HPO_ANNONARS_GENES+$V_VARFISHDB_ANNONARS_GENES+$V_ANNONARS_ANNONARS_GENES \
+        $DATA_DIR/download/annonars/genes-$V_ACMG_SF+$V_GNOMAD_CONSTRAINTS+$V_DBNSFP_NO_SUFFIX+$V_HPO+$V_ORPHAPACKETS+$V_VARFISHDB+$V_ANNONARS \
         $DATA_DIR/annonars/genes
 
     # cadd - GRCh37
@@ -595,8 +595,8 @@ if [[ "$STEPS" = *other* ]]; then
 
     log_info "- dotty"
 
-    mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/download/dotty
-    pushd $DIR_PREFIX/volumes/$STATIC_DIR/data/download/dotty >/dev/null
+    mkdir -p $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/dotty
+    pushd $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/dotty >/dev/null
     wget -q -c \
         https://github.com/SACGF/cdot/releases/download/v$V_DOTTY_CDOT_VERSION/cdot-$V_DOTTY_CDOT_VERSION.ensembl.grch37.json.gz \
         https://github.com/SACGF/cdot/releases/download/v$V_DOTTY_CDOT_VERSION/cdot-$V_DOTTY_CDOT_VERSION.ensembl.grch38.json.gz \
@@ -608,26 +608,26 @@ if [[ "$STEPS" = *other* ]]; then
     cat seqrepo.tar.gz-?? | tar -xzf -
     popd >/dev/null
 
-    mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/dotty
-    rm -f $DIR_PREFIX/volumes/$STATIC_DIR/data/dotty/{*.json.gz,seqrepo}
-    ln -sr $DIR_PREFIX/volumes/$STATIC_DIR/data/download/dotty/{*.json.gz,seqrepo} \
-      $DIR_PREFIX/volumes/$STATIC_DIR/data/dotty
+    mkdir -p $DIR_PREFIX/volumes/$STATIC_INFIX/data/dotty
+    rm -f $DIR_PREFIX/volumes/$STATIC_INFIX/data/dotty/{*.json.gz,seqrepo}
+    ln -sr $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/dotty/{*.json.gz,seqrepo} \
+      $DIR_PREFIX/volumes/$STATIC_INFIX/data/dotty
 
     log_info "- cada-prio"
 
-    mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/download/cada
-    pushd $DIR_PREFIX/volumes/$STATIC_DIR/data/download/cada >/dev/null
+    mkdir -p $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/cada
+    pushd $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/cada >/dev/null
     wget -q -c \
         https://github.com/bihealth/cada-prio-data/releases/download/cada-prio-data-$V_CADA_PRIO_MODEL/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
     tar -xzf cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION.tar.gz
     popd >/dev/null
 
-    mkdir -p $DIR_PREFIX/volumes/$STATIC_DIR/data/cada
-    rm -f $DIR_PREFIX/volumes/$STATIC_DIR/data/cada/model
+    mkdir -p $DIR_PREFIX/volumes/$STATIC_INFIX/data/cada
+    rm -f $DIR_PREFIX/volumes/$STATIC_INFIX/data/cada/model
 
-    source_dir="$DIR_PREFIX/volumes/$STATIC_DIR/data/download/cada/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION/model"
+    source_dir="$DIR_PREFIX/volumes/$STATIC_INFIX/data/download/cada/cada-prio-model-$V_CADA_PRIO_MODEL+$V_CADA_PRIO_VERSION/model"
     for file in "${source_dir}"/*; do
-      rm -f "$DIR_PREFIX/volumes/$STATIC_DIR/data/cada/$(basename "$file")"
-      ln -sr "$file" "$DIR_PREFIX/volumes/$STATIC_DIR/data/cada/"
+      rm -f "$DIR_PREFIX/volumes/$STATIC_INFIX/data/cada/$(basename "$file")"
+      ln -sr "$file" "$DIR_PREFIX/volumes/$STATIC_INFIX/data/cada/"
     done
 fi
