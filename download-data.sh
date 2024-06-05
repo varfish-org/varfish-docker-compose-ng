@@ -396,18 +396,18 @@ EOF
         $DATA_DIR/annonars/grch38/cons
 
     log_info "- mehari"
-    mkdir -p $DATA_DIR/mehari/{grch37,grch38}
+    mkdir -p $DATA_DIR/mehari/{grch37,grch38}/seqvars
 
     # freqs - GRCh37
-    rm -f $DATA_DIR/mehari/grch37/freqs
+    rm -f $DATA_DIR/mehari/grch37/seqvars/freqs
     ln -sr \
         $DATA_DIR/download/mehari/freqs-grch37-$V_GNOMAD_EXOMES_GRCH37+$V_GNOMAD_GENOMES_GRCH37+$V_GNOMAD_MT+$V_HELIXMTDB+$V_ANNONARS \
-        $DATA_DIR/mehari/grch37/freqs
+        $DATA_DIR/mehari/grch37/seqvars/freqs
     # freqs - GRCh38
-    rm -f $DATA_DIR/mehari/grch38/freqs
+    rm -f $DATA_DIR/mehari/grch38/seqvars/freqs
     ln -sr \
         $DATA_DIR/download/mehari/freqs-grch38-$V_GNOMAD_EXOMES_GRCH38+$V_GNOMAD_GENOMES_GRCH38+$V_GNOMAD_MT+$V_HELIXMTDB+$V_ANNONARS \
-        $DATA_DIR/mehari/grch38/freqs
+        $DATA_DIR/mehari/grch38/seqvars/freqs
 
     log_info "- viguno"
     mkdir -p $DATA_DIR/viguno
