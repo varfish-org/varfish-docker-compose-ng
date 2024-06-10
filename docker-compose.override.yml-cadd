@@ -23,7 +23,8 @@ services:
 
   cadd-rest-api-server:
     <<: *service_default
-    image: "${image_cadd_name-varfish-org/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
+    image: "${image_base-ghcr.io/varfish-org}/\
+      ${image_cadd_name:-cadd-rest-api}:${image_cadd_version:-main}"
     env_file: cadd-rest-api.env
     command:
       - wsgi
@@ -36,8 +37,9 @@ services:
   cadd-rest-api-worker:
     <<: *service_default
     deploy:
-      replicas: 5
-    image: "${image_cadd_name-varfish-org/cadd-rest-api}:${image_cadd_version-0.3.4-0}"
+      replicas: "${cadd_rest_api_worker_replicas:-5}"
+    image: "${image_base-ghcr.io/varfish-org}/\
+      ${image_cadd_name:-cadd-rest-api}:${image_cadd_version:-main}"
     env_file: cadd-rest-api.env
     command:
       - celeryd
