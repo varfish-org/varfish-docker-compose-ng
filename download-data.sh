@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+
 # Inofficial Bash Strict Mode
 #
 # cf. http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -29,7 +30,7 @@ export S3_ENDPOINT_URL=https://ceph-s3-public.cubi.bihealth.org
 # Grep regex expression for downloading data.
 export LIST_GREP=${LIST_GREP-}
 # Steps to execute
-export STEPS=${STEPS-s3_sync,other}
+export STEPS=${STEPS-s3_sync,mehari,dotty,clinvar,cada}
 
 # Set S5CMD_NO_VERIFY_SSL_ARG based on NO_VERIFY_SSL
 if [ "$NO_VERIFY_SSL" -eq 1 ]; then
@@ -533,7 +534,7 @@ EOF
     log_info "... done setting up symlink structure."
 fi
 
-if [[ "$STEPS" = *other* ]]; then
+if [[ "$STEPS" = *mehari* ]]; then
     log_info "- mehari transcripts"
 
     mkdir -p $DATA_DIR/download/mehari-data-txs-grch3{7,8}
@@ -550,7 +551,9 @@ if [[ "$STEPS" = *other* ]]; then
       ln -sr $DATA_DIR/download/mehari-data-txs-$release/mehari-data-txs-$release-$V_MEHARI_TXS.bin.zst \
         $DATA_DIR/mehari/$release/txs.bin.zst
     done
+fi
 
+if [[ "$STEPS" = *clinvar* ]]; then
     log_info "- clinvar"
 
     wget -q -c -O /tmp/annonars-clinvar-minimal-grch37-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS.tar.gz \
@@ -592,7 +595,9 @@ if [[ "$STEPS" = *other* ]]; then
       $DATA_DIR/annonars/grch37/clinvar-sv
     ln -sr $DATA_DIR/download/annonars/annonars-clinvar-sv-grch38-$V_ANNONARS_DATA_CLINVAR_CLINVAR+$V_ANNONARS_DATA_CLINVAR_ANNONARS \
       $DATA_DIR/annonars/grch38/clinvar-sv
+fi
 
+if [[ "$STEPS" = *dotty* ]]; then
     log_info "- dotty"
 
     mkdir -p $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/dotty
@@ -612,7 +617,9 @@ if [[ "$STEPS" = *other* ]]; then
     rm -f $DIR_PREFIX/volumes/$STATIC_INFIX/data/dotty/{*.json.gz,seqrepo}
     ln -sr $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/dotty/{*.json.gz,seqrepo} \
       $DIR_PREFIX/volumes/$STATIC_INFIX/data/dotty
+fi
 
+if [[ "$STEPS" = *cada* ]]; then
     log_info "- cada-prio"
 
     mkdir -p $DIR_PREFIX/volumes/$STATIC_INFIX/data/download/cada
